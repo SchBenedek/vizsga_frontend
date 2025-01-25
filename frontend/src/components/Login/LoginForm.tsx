@@ -13,6 +13,14 @@ function LoginForm() {
     <>
       <div className="container">
         <Form>
+          <FormGroup className="mb-4" controlId="loginRole">
+            <Form.Label>Tanár/Diák</Form.Label>
+            <Form.Control as={"select"}>
+                <option value={"teacher"}>Tanár</option>
+                <option value={"student"}>Diák</option>
+            </Form.Control>
+          </FormGroup>
+
           <Form.Group className="mb-4" controlId="loginEmail">
             <Form.Label>Email or Username</Form.Label>
             <Form.Control type="email" placeholder="Enter your email or username" />
@@ -33,13 +41,6 @@ function LoginForm() {
               </Button>
             </InputGroup>
           </Form.Group>
-          <FormGroup className="mb-4" controlId="loginRole">
-            <Form.Label>Tanár/Diák</Form.Label>
-            <Form.Control as={"select"}>
-                <option value={"teacher"}>Tanár</option>
-                <option value={"student"}>Diák</option>
-            </Form.Control>
-          </FormGroup>
 
           <SocialLogin />
           <Button variant="primary" type="submit" className="w-100 mb-4">
