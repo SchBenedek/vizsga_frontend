@@ -6,11 +6,16 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Startpage from './components/Startpage.tsx';
+import Startpage from './components/Pages/Startpage.tsx';
+import TeacherPage from './components/Pages/teacherPage.tsx';
 
 const router=createBrowserRouter([
   {path: "/",
     element: <Startpage />,
+  },
+  {
+    path: "/teacherPage",
+    element: <TeacherPage />,
   }
 ])
 

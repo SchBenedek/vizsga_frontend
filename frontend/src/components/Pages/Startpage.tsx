@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, Tab } from "react-bootstrap";
-import LoginForm from "./Login/LoginForm";
-import RegisterForm from "./Login/RegisterForm";
+import LoginForm from "../Login/LoginForm";
+import RegisterForm from "../Login/RegisterForm";
 
 function Startpage() {
   return (
