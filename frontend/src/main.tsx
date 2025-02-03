@@ -7,15 +7,20 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Startpage from './components/Pages/Startpage.tsx';
-import TeacherPage from './components/Pages/teacherPage.tsx';
+import Assigments from './components/Pages/Assigments.tsx';
+import TeacherMain from './components/Pages/teacherMain.tsx';
 
 const router=createBrowserRouter([
   {path: "/",
     element: <Startpage />,
   },
   {
-    path: "/teacherPage",
-    element: <TeacherPage />,
+    path: "/teacherMain",
+    element: <TeacherMain />,
+  },
+  {
+    path: "/assigments",
+    element: <Assigments />,
   }
 ])
 

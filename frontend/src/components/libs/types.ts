@@ -6,3 +6,10 @@ export interface Profile{
     password: string;
     role: string;
 }
+
+export interface Assignment{
+    id: number;
+    subject: string;
+    ageGroup: string;
+    assignments: string;
+}
