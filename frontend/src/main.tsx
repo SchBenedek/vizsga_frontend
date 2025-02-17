@@ -9,13 +9,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Startpage from './components/Pages/Startpage.tsx';
 import Assigments from './components/Pages/Assigments.tsx';
 import TeacherMain from './components/Pages/teacherMain.tsx';
+import { AuthProvider } from './components/Login/LoginContext.tsx';
 
 const router=createBrowserRouter([
-  {path: "/",
+  {
+    path: "/",
     element: <Startpage />,
   },
   {
-    path: "/teacherMain",
+    path: "/teachermain",
     element: <TeacherMain />,
   },
   {
@@ -26,6 +28,8 @@ const router=createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )

@@ -13,3 +13,15 @@ export interface Assignment{
     ageGroup: string;
     assignments: string;
 }
+
+export interface Teacher{
+    id: number;
+    name: string;
+    subjectTeacher: string;
+    hourlyRate: number;
+    email: string;
+    numberOfStudents: number;
+    rating: number;
+    password: string;
+    role: string;
+}
