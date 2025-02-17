@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Assignment } from "../libs/types";
-import { TeacherPageNav } from "./teacherPageNav";
+import { TeacherPageNav } from "../Navbar/TeacherPageNav";
+import { useAuth } from "../Login/LoginContext";
+import { StudentPageNav } from "../Navbar/StudentPageNav";
 
 export default function assignments(){
+    const { role } = useAuth;
     const [assignments, setassignments]=useState<Assignment[]>([]);
     const [filterAssignments, setFilterAssignments]=useState<Assignment[]>([]);
     const [loading, setLoading]=useState(true);
@@ -49,10 +52,11 @@ export default function assignments(){
 
     return (
         <div className="d-flex" style={{ height: "100vh" }}>
-            <TeacherPageNav 
-                assignments={assignments}
-                setFilterAssignments={setFilterAssignments}
-            />
+            {role === "teacher" ? (
+                <TeacherPageNav assignments={assignments} setFilterAssignments={setFilterAssignments} />
+            ) : (
+                <StudentPageNav assignments={assignments} setFilterAssignments={setFilterAssignments} />
+            )}
             <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1 }}>
                 <div className="row">
                     {assignments.map((assignment) => (

@@ -25,3 +25,12 @@ export interface Teacher{
     password: string;
     role: string;
 }
+
+export interface Student{
+    id: number;
+    name: string;
+    email: string;
+    ageGroup: string;
+    password: string;
+    role: string;
+}

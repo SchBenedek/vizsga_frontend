@@ -5,11 +5,10 @@ import { useNavigate } from "react-router-dom";
 import SocialLogin from "./SocialLogin";
 
 function LoginForm() {
-  const { setRole, setIsLoggedIn, setTeacherId } = useAuth();
+  const { setRole, setIsLoggedIn, setTeacherId, setStudentId } = useAuth();
   const navigate = useNavigate();
-  const [role, setLocalRole] = useState<string>("teacher");
+  const [localRole, setLocalRole] = useState<string>("teacher");
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -21,7 +20,8 @@ function LoginForm() {
     e.preventDefault();
   
     try {
-      const response = await fetch(`http://localhost:3000/${role}s/login`, {
+      const roleEndpoint = localRole === "teacher" ? "teachers" : "students";
+      const response = await fetch(`http://localhost:3000/${roleEndpoint}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -31,16 +31,21 @@ function LoginForm() {
       if (!response.ok) throw new Error(data.message || "Login failed");
   
       console.log("Login successful:", data);
-      setRole(role);
+      setRole(localRole);
       setIsLoggedIn(true);
   
       localStorage.setItem("token", data.token);
   
-      if (role === "teacher") {
+      if (localRole === "teacher") {
         setTeacherId(data.teacherId);
+        setTimeout(() => navigate("/teachermain"), 0);
+      }
+      if (localRole === "student") {
+        setStudentId(data.studentId);
+        navigate("/studentmain");
+        window.location.reload();
       }
   
-      navigate("/teachermain");
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -52,7 +57,7 @@ function LoginForm() {
         <Form.Label>Role</Form.Label>
         <Form.Control
           as="select"
-          value={role}
+          value={localRole}
           onChange={(e) => setLocalRole(e.target.value)}
         >
           <option value="teacher">Teacher</option>
@@ -60,7 +65,6 @@ function LoginForm() {
         </Form.Control>
       </Form.Group>
 
-      {role === "teacher" ? (
         <Form.Group>
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -71,18 +75,6 @@ function LoginForm() {
             placeholder="Enter your email"
           />
         </Form.Group>
-      ) : (
-        <Form.Group>
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            placeholder="Enter your username"
-          />
-        </Form.Group>
-      )}
 
       <Form.Group>
         <Form.Label>Password</Form.Label>

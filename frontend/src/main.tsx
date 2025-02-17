@@ -8,8 +8,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Startpage from './components/Pages/Startpage.tsx';
 import Assigments from './components/Pages/Assigments.tsx';
-import TeacherMain from './components/Pages/teacherMain.tsx';
 import { AuthProvider } from './components/Login/LoginContext.tsx';
+import StudentMain from './components/Pages/StudentMain.tsx';
+import TeacherMain from './components/Pages/teacherMain.tsx';
 
 const router=createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router=createBrowserRouter([
   {
     path: "/teachermain",
     element: <TeacherMain />,
+  },
+  {
+    path: "/studentmain",
+    element: <StudentMain />,
   },
   {
     path: "/assigments",

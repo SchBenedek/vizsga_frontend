@@ -7,6 +7,8 @@ interface AuthContextType {
   setRole: (role: string) => void;
   teacherId: string | null;
   setTeacherId: (id: string | null) => void;
+  studentId: string | null;
+  setStudentId: (id: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -16,6 +18,8 @@ const AuthContext = createContext<AuthContextType>({
   setRole: () => {},
   teacherId: null,
   setTeacherId: () => {},
+  studentId: null,
+  setStudentId: () => {}
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -28,7 +32,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [teacherId, setTeacherIdState] = useState<string | null>(() => {
-    return localStorage.getItem("teacherId") || null;  // 🔥 Load teacherId from localStorage
+    return localStorage.getItem("studentId") || null;
+  });
+
+  const [studentId, setStudentIdState] = useState<string | null>(() => {
+    return localStorage.getItem("teacherId") || null;
   });
 
   const setIsLoggedIn = (value: boolean) => {
@@ -50,8 +58,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const setStudentId = (id: string | null) => {
+    setStudentIdState(id);
+    if (id) {
+      localStorage.setItem("studentId", id);
+    } else {
+      localStorage.removeItem("studentId"); 
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole, teacherId, setTeacherId }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole, teacherId, setTeacherId, studentId, setStudentId }}>
       {children}
     </AuthContext.Provider>
   );
