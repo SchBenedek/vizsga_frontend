@@ -1,113 +1,145 @@
 import React, { useState } from "react";
-import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
+import { Form, Button, InputGroup } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import SocialLogin from "./SocialLogin";
 
 function RegisterForm() {
+  const navigate = useNavigate();
+  const [role, setRole] = useState<string>("teacher");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [ageGroup, setAgeGroup] = useState("");
+  const [assignmentId, setAssignmentId] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [repeatPasswordVisible, setRepeatPasswordVisible] = useState(false);
 
-    const [passwordVisible, setPasswordVisible] = useState(false);
-    const [repeatPasswordVisible, setRepeatPasswordVisible] = useState(false);
-    const [role, setRole] = useState<string>("teacher");
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
-    const togglePasswordVisibility = () => {
-        setPasswordVisible(!passwordVisible);
-    };
+  const toggleRepeatPasswordVisibility = () => {
+    setRepeatPasswordVisible(!repeatPasswordVisible);
+  };
 
-    const toggleRepeatPasswordVisibility = () => {
-        setRepeatPasswordVisible(!repeatPasswordVisible);
-    };
-
-    const preventCopy = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-    };
-
-    const roles = () => {
-        if (role == "teacher") {
-            setRole("student")
-        }
-        else {
-            setRole("teacher")
-        }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== repeatPassword) {
+      alert("Passwords do not match");
+      return;
     }
+  
+    try {
+      const roleEndpoint = role === "teacher" ? "teachers" : "students";
+      const bodyData = { name, email, password, ageGroup, assignmentId : Number(assignmentId) };
+  
+      const response = await fetch(`http://localhost:3000/${roleEndpoint}/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Registration failed");
+  
+      console.log("Registration successful:", data);
+      navigate("/");
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
+  };  
 
-    const email = (<Form.Group className="mb-4" controlId="registerEmail">
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Form.Group>
+        <Form.Label>Teljes név</Form.Label>
+        <Form.Control
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          placeholder="Név"
+        />
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Tanár/Diák</Form.Label>
+        <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="teacher">Tanár</option>
+          <option value="student">Diák</option>
+        </Form.Control>
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Életkor csoport</Form.Label>
+        <Form.Control
+          type="text"
+          value={ageGroup}
+          onChange={(e) => setAgeGroup(e.target.value)}
+          required
+          placeholder="Pl: 18-25"
+        />
+      </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Assignment ID</Form.Label>
+        <Form.Control
+          type="number"
+          value={assignmentId}
+          onChange={(e) => setAssignmentId(e.target.value)}
+          required
+          placeholder="Assignment ID"
+        />
+      </Form.Group>
+
+      <Form.Group>
         <Form.Label>Email</Form.Label>
-        <Form.Control type="email" placeholder="Enter your email" />
-        </Form.Group>)
+        <Form.Control
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          placeholder="Email cím"
+        />
+      </Form.Group>
 
-    return (
-        <>
-            <div className="container">
-                <Form>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <Form.Group className="mb-4" controlId="registerName">
-                                <Form.Label>Full Name</Form.Label>
-                                <Form.Control type="text" placeholder="Enter your name" />
-                            </Form.Group>
-                        </div>
-                        <div className="col-md-6">
-                            <Form.Group className="mb-4" controlId="registerUsername">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter a username" />
-                            </Form.Group>
-                        </div>
-                        <div className="col-md-6">
-                            <Form.Group className="mb-4" controlId="loginRole">
-                                <Form.Label>Tanár/Diák</Form.Label>
-                                <Form.Control as="select" onChange={roles}>
-                                    <option value="teacher">Tanár</option>
-                                    <option value="student">Diák</option>
-                                </Form.Control>
-                            </Form.Group>
-                        </div>
-                        {role === "teacher" ? (
-                            <div className="col-md-6">{email}</div>
-                        ) : null}
-                        <div className="col-md-6">
-                            <Form.Group className="mb-4" controlId="registerPassword">
-                                <Form.Label>Password</Form.Label>
-                                <InputGroup>
-                                    <Form.Control
-                                        type={passwordVisible ? "text" : "password"}
-                                        placeholder="Enter your password"
-                                        onCopy={preventCopy}
-                                    />
-                                    <Button
-                                        variant="outline-secondary"
-                                        onClick={togglePasswordVisibility}
-                                    >
-                                        {passwordVisible ? "Hide" : "Show"}
-                                    </Button>
-                                </InputGroup>
-                            </Form.Group>
-                        </div>
-                        <div className="col-md-6">
-                            <Form.Group className="mb-4" controlId="registerRepeatPassword">
-                                <Form.Label>Repeat Password</Form.Label>
-                                <InputGroup>
-                                    <Form.Control
-                                        type={repeatPasswordVisible ? "text" : "password"}
-                                        placeholder="Enter your password again"
-                                    />
-                                    <Button
-                                        variant="outline-secondary"
-                                        onClick={toggleRepeatPasswordVisibility}
-                                    >
-                                        {repeatPasswordVisible ? "Hide" : "Show"}
-                                    </Button>
-                                </InputGroup>
-                            </Form.Group>
-                        </div>
-                    </div>
-                    <SocialLogin />
-                    <Button variant="primary" type="submit" className="w-100">
-                        Register
-                    </Button>
-                </Form>
-            </div>
+      <Form.Group>
+        <Form.Label>Jelszó</Form.Label>
+        <InputGroup>
+          <Form.Control
+            type={passwordVisible ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder="Jelszó"
+          />
+          <Button variant="outline-secondary" onClick={togglePasswordVisibility}>
+            {passwordVisible ? <i className="fa fa-eye" style={{ color: 'white' }}></i> : <i className="fa fa-eye" style={{ color: '#0d6efd' }}></i>}
+          </Button>
+        </InputGroup>
+      </Form.Group>
 
-        </>
-    );
+      <Form.Group>
+        <Form.Label>Jelszó megerősítése</Form.Label>
+        <InputGroup>
+          <Form.Control
+            type={repeatPasswordVisible ? "text" : "password"}
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
+            required
+            placeholder="Jelszó újra"
+          />
+          <Button variant="outline-secondary" onClick={toggleRepeatPasswordVisibility}>
+            {repeatPasswordVisible ? <i className="fa fa-eye" style={{ color: 'white' }}></i> : <i className="fa fa-eye" style={{ color: '#0d6efd' }}></i>}
+          </Button>
+        </InputGroup>
+      </Form.Group>
+
+      <SocialLogin />
+      <Button type="submit">Regisztrálok</Button>
+    </Form>
+  );
 }
 
 export default RegisterForm;

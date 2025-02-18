@@ -30,20 +30,18 @@ function LoginForm() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Login failed");
   
-      console.log("Login successful:", data);
       setRole(localRole);
       setIsLoggedIn(true);
   
       localStorage.setItem("token", data.token);
   
       if (localRole === "teacher") {
-        setTeacherId(data.teacherId);
+        setTeacherId(data.teacherID);
         setTimeout(() => navigate("/teachermain"), 0);
       }
       if (localRole === "student") {
-        setStudentId(data.studentId);
+        setStudentId(data.studentID);
         navigate("/studentmain");
-        window.location.reload();
       }
   
     } catch (error) {
@@ -54,14 +52,14 @@ function LoginForm() {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group>
-        <Form.Label>Role</Form.Label>
+        <Form.Label>Oldal tanároknak</Form.Label>
         <Form.Control
           as="select"
           value={localRole}
           onChange={(e) => setLocalRole(e.target.value)}
         >
-          <option value="teacher">Teacher</option>
-          <option value="student">Student</option>
+          <option value="teacher">Tanár</option>
+          <option value="student">Diák</option>
         </Form.Control>
       </Form.Group>
 
@@ -72,28 +70,28 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="Enter your email"
+            placeholder="Email cím"
           />
         </Form.Group>
 
       <Form.Group>
-        <Form.Label>Password</Form.Label>
+        <Form.Label>Jelszó</Form.Label>
         <InputGroup>
           <Form.Control
             type={passwordVisible ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            placeholder="Enter your password"
+            placeholder="Jelszó"
           />
           <Button variant="outline-secondary" onClick={togglePasswordVisibility}>
-            {passwordVisible ? "Hide" : "Show"}
+            {passwordVisible ? <i className="fa fa-eye" style={{color: 'white'}}></i> : <i className="fa fa-eye" style={{ color: '#0d6efd'}}></i>}
           </Button>
         </InputGroup>
       </Form.Group>
       
       <SocialLogin />
-      <Button type="submit">Login</Button>
+      <Button type="submit">Bejelentkezés</Button>
     </Form>
   );
 }

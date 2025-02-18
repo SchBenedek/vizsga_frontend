@@ -5,9 +5,9 @@ interface AuthContextType {
   setIsLoggedIn: (value: boolean) => void;
   role: string | null;
   setRole: (role: string) => void;
-  teacherId: string | null;
+  teacherID: string | null;
   setTeacherId: (id: string | null) => void;
-  studentId: string | null;
+  studentID: string | null;
   setStudentId: (id: string | null) => void;
 }
 
@@ -16,9 +16,9 @@ const AuthContext = createContext<AuthContextType>({
   setIsLoggedIn: () => {},
   role: null,
   setRole: () => {},
-  teacherId: null,
+  teacherID: null,
   setTeacherId: () => {},
-  studentId: null,
+  studentID: null,
   setStudentId: () => {}
 });
 
@@ -31,12 +31,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return localStorage.getItem("userRole") || null;
   });
 
-  const [teacherId, setTeacherIdState] = useState<string | null>(() => {
-    return localStorage.getItem("studentId") || null;
+  const [teacherID, setTeacherIdState] = useState<string | null>(() => {
+    return localStorage.getItem("studentID") || null;
   });
 
-  const [studentId, setStudentIdState] = useState<string | null>(() => {
-    return localStorage.getItem("teacherId") || null;
+  const [studentID, setStudentIdState] = useState<string | null>(() => {
+    return localStorage.getItem("teacherID") || null;
   });
 
   const setIsLoggedIn = (value: boolean) => {
@@ -52,23 +52,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const setTeacherId = (id: string | null) => {
     setTeacherIdState(id);
     if (id) {
-      localStorage.setItem("teacherId", id);
+      localStorage.setItem("teacherID", id);
     } else {
-      localStorage.removeItem("teacherId"); 
+      localStorage.removeItem("teacherID"); 
     }
   };
 
   const setStudentId = (id: string | null) => {
     setStudentIdState(id);
     if (id) {
-      localStorage.setItem("studentId", id);
+      localStorage.setItem("studentID", id);
     } else {
-      localStorage.removeItem("studentId"); 
+      localStorage.removeItem("studentID"); 
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole, teacherId, setTeacherId, studentId, setStudentId }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole, teacherID, setTeacherId, studentID, setStudentId }}>
       {children}
     </AuthContext.Provider>
   );

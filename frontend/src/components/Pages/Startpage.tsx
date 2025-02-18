@@ -10,10 +10,10 @@ function Startpage() {
         <h1 className="mb-4">Tanár-diák weboldal</h1>
         <p className="lead mb-3">Learn once, access always.</p>
         <Tabs defaultActiveKey="login" id="auth-tabs" className="mb-5 nav-pills nav-justified">
-          <Tab eventKey="login" title="Login">
+          <Tab eventKey="login" title="Bejelentkezés">
             <LoginForm />
           </Tab>
-          <Tab eventKey="register" title="Register">
+          <Tab eventKey="register" title="Regisztráció">
             <RegisterForm />
           </Tab>
         </Tabs>

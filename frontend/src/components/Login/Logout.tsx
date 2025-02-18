@@ -1,7 +1,5 @@
-import React from "react";
 import { useAuth } from "../Login/LoginContext";
 import { useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
 
 function Logout(){
   const { setIsLoggedIn, setRole } = useAuth();

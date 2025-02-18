@@ -4,7 +4,7 @@ import { StudentPageNav } from "../Navbar/StudentPageNav";
 import { useAuth } from "../Login/LoginContext";
 
 export default function StudentMain() {
-    const { studentId } = useAuth();
+    const { studentID } = useAuth();
     const [filteredAssignments, setFilterAssignments] = useState<Assignment[]>([]);
     const [student, setStudent] = useState<Student>();
     const [loading, setLoading] = useState(true);
@@ -12,26 +12,28 @@ export default function StudentMain() {
     const [errorServer, setErrorServer] = useState<string>();
 
     useEffect(() => {
-        if (!studentId) return;
+        if (!studentID) return;
 
         const studentFetch = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/students/${studentId}`);
+                setLoading(true);
+                const response = await fetch(`http://localhost:3000/students/${studentID}`);
                 if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
-
+    
                 const data = await response.json();
                 setStudent(data);
                 setFilterAssignments(data.assignments);
-                setLoading(false);
             } catch (error) {
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
         studentFetch();
-    }, [studentId]);
+    }, [studentID]);
 
-    if (!studentId) return <p>Loading student information...</p>;
+    if (!studentID) return <p>Loading student information...</p>;
     if (errorServer) return <p>{errorServer}</p>;
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Hiba történt: {error}.</p>;

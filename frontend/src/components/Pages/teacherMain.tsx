@@ -4,7 +4,7 @@ import { TeacherPageNav } from "../Navbar/TeacherPageNav";
 import { useAuth } from "../Login/LoginContext";
 
 export default function TeacherMain() {
-    const { teacherId } = useAuth();
+    const { teacherID } = useAuth();
     const [filteredAssignments, setFilterAssignments] = useState<Assignment[]>([]);
     const [teacher, setTeacher] = useState<Teacher>();
     const [loading, setLoading] = useState(true);
@@ -12,11 +12,11 @@ export default function TeacherMain() {
     const [errorServer, setErrorServer] = useState<string>();
 
     useEffect(() => {
-        if (!teacherId) return;
+        if (!teacherID) return;
 
         const teacherFetch = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/teachers/${teacherId}`);
+                const response = await fetch(`http://localhost:3000/teachers/${teacherID}`);
                 if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
 
                 const data = await response.json();
@@ -29,9 +29,9 @@ export default function TeacherMain() {
         };
 
         teacherFetch();
-    }, [teacherId]);
+    }, [teacherID]);
 
-    if (!teacherId) return <p>Loading teacher information...</p>;
+    if (!teacherID) return <p>Loading teacher information...</p>;
     if (errorServer) return <p>{errorServer}</p>;
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Hiba történt: {error}.</p>;
