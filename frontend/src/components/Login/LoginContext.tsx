@@ -32,11 +32,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [teacherID, setTeacherIdState] = useState<string | null>(() => {
-    return localStorage.getItem("studentID") || null;
+    return localStorage.getItem("teacherID") || null;
   });
 
   const [studentID, setStudentIdState] = useState<string | null>(() => {
-    return localStorage.getItem("teacherID") || null;
+    return localStorage.getItem("studentID") || null;
   });
 
   const setIsLoggedIn = (value: boolean) => {

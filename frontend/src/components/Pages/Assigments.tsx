@@ -5,7 +5,7 @@ import { useAuth } from "../Login/LoginContext";
 import { StudentPageNav } from "../Navbar/StudentPageNav";
 
 export default function assignments(){
-    const { role } = useAuth;
+    const { role } = useAuth();
     const [assignments, setassignments]=useState<Assignment[]>([]);
     const [filterAssignments, setFilterAssignments]=useState<Assignment[]>([]);
     const [loading, setLoading]=useState(true);

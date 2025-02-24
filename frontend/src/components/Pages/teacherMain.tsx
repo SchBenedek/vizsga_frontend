@@ -16,15 +16,17 @@ export default function TeacherMain() {
 
         const teacherFetch = async () => {
             try {
+                setLoading(true);
                 const response = await fetch(`http://localhost:3000/teachers/${teacherID}`);
                 if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
-
+    
                 const data = await response.json();
                 setTeacher(data);
                 setFilterAssignments(data.assignments);
-                setLoading(false);
-            } catch (error) {
+            } catch (error:any) {
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 

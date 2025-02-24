@@ -23,7 +23,7 @@ export default function StudentMain() {
                 const data = await response.json();
                 setStudent(data);
                 setFilterAssignments(data.assignments);
-            } catch (error) {
+            } catch (error:any) {
                 setError(error.message);
             } finally {
                 setLoading(false);

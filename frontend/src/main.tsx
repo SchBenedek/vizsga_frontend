@@ -10,7 +10,8 @@ import Startpage from './components/Pages/Startpage.tsx';
 import Assigments from './components/Pages/Assigments.tsx';
 import { AuthProvider } from './components/Login/LoginContext.tsx';
 import StudentMain from './components/Pages/StudentMain.tsx';
-import TeacherMain from './components/Pages/teacherMain.tsx';
+import TeacherMain from './components/Pages/TeacherMain.tsx';
+import Teachers from './components/Pages/StudentsTeacherChoice.tsx';
 
 const router=createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router=createBrowserRouter([
   {
     path: "/assigments",
     element: <Assigments />,
+  },
+  {
+    path: "/teachers",
+    element: <Teachers />
   }
 ])
 

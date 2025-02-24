@@ -40,7 +40,7 @@ export const StudentPageNav = ({ assignments, setFilterAssignments }: Props) => 
                     <a href="/studentmain" className="nav-link active">Főoldal</a>
                 </li>
                 <li><a href="#" className="nav-link text-white">Értékelésed</a></li>
-                <li><a href="/assigments" className="nav-link text-white">Feladatok</a></li>
+                <li><a href="teachers" className="nav-link text-white">Tanárok</a></li>
                 <li><a href="#" className="nav-link text-white">Kiadott feladatok</a></li>
                 <li><a href="#" className="nav-link text-white">Visszaküldött feladatok</a></li>
                 <li className="nav-item dropdown">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Button, InputGroup } from "react-bootstrap";
+import { Form, Button, InputGroup, Alert } from "react-bootstrap";
 import { useAuth } from "../Login/LoginContext";
 import { useNavigate } from "react-router-dom";
 import SocialLogin from "./SocialLogin";
@@ -11,6 +11,7 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -18,6 +19,7 @@ function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
   
     try {
       const roleEndpoint = localRole === "teacher" ? "teachers" : "students";
@@ -33,24 +35,26 @@ function LoginForm() {
       setRole(localRole);
       setIsLoggedIn(true);
   
-      localStorage.setItem("token", data.token);
-  
       if (localRole === "teacher") {
-        setTeacherId(data.teacherID);
+        localStorage.setItem("token", data.token);
+        setTeacherId(data.teacherId);
         setTimeout(() => navigate("/teachermain"), 0);
       }
       if (localRole === "student") {
+        localStorage.setItem("token", data.token);
         setStudentId(data.studentID);
         navigate("/studentmain");
       }
   
-    } catch (error) {
+    } catch (error:any) {
       console.error("Login error:", error);
+      setError(error.message || "Hibás email vagy jelszó.");
     }
   };
   
   return (
     <Form onSubmit={handleSubmit}>
+      {error && <Alert variant="danger">{error}</Alert>}
       <Form.Group>
         <Form.Label>Oldal tanároknak</Form.Label>
         <Form.Control
