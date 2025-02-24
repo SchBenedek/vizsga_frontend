@@ -19,8 +19,12 @@ const router=createBrowserRouter([
     element: <Startpage />,
   },
   {
-    path: "/teachermain",
+    path: "/teachers/dashboard",
     element: <TeacherMain />,
+  },
+  {
+    path: "/student/teacher/:teacherID", 
+    element: <TeacherMain />
   },
   {
     path: "/studentmain",

@@ -2,20 +2,28 @@ import { useEffect, useState } from "react";
 import { StudentPageNav } from "../Navbar/StudentPageNav";
 import { useAuth } from "../Login/LoginContext";
 import { Assignment, Teacher } from "../libs/types";
+import { Link, Navigate } from "react-router-dom";
 
 export default function Teachers() {
-    const { role } = useAuth();
+    useAuth();
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [filterTeachers, setFilterTeachers] = useState<Teacher[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [errorServer, setErrorServer] = useState<string | null>(null);
+    const token = localStorage.getItem("authToken");
 
     const fetchTeachers = () => {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:3000/teachers`)
+        fetch(`http://localhost:3000/teachers`,{
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
             .then((response) => {
                 if (response.status === 404) {
                     throw new Error("A kért erőforrás nem található (404)!");
@@ -70,9 +78,11 @@ export default function Teachers() {
                                         <br />
                                         <strong>Email:</strong> {teacher.email}
                                     </p>
-                                    <button className="btn btn-primary">
-                                        Tanulok tőle
-                                    </button>
+                                    <Link to={`/student/teacher/${teacher.id}`}>
+                                        <button className="btn btn-primary">
+                                            Tanulok tőle
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

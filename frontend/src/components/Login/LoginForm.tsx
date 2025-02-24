@@ -30,6 +30,7 @@ function LoginForm() {
       });
   
       const data = await response.json();
+      localStorage.setItem("authToken", data.token);
       if (!response.ok) throw new Error(data.message || "Login failed");
   
       setRole(localRole);
