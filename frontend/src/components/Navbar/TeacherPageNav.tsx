@@ -37,7 +37,7 @@ export const TeacherPageNav = ({ assignments, setFilterAssignments }: Props) => 
             <hr />
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item">
-                    <a href="/teachermain" className="nav-link active">Főoldal</a>
+                    <a href="/teachers/dashboard" className="nav-link active">Főoldal</a>
                 </li>
                 <li><a href="#" className="nav-link text-white">Diákok</a></li>
                 <li><a href="/assigments" className="nav-link text-white">Feladatok</a></li>

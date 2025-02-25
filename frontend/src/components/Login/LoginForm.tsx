@@ -39,7 +39,7 @@ function LoginForm() {
       if (localRole === "teacher") {
         localStorage.setItem("token", data.token);
         setTeacherId(data.teacherId);
-        setTimeout(() => navigate("/teachermain"), 0);
+        setTimeout(() => navigate("/teachers/dashboard"), 0);
       }
       if (localRole === "student") {
         localStorage.setItem("token", data.token);
