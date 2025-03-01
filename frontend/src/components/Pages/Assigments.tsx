@@ -5,40 +5,43 @@ import { useAuth } from "../Login/LoginContext";
 import { StudentPageNav } from "../Navbar/StudentPageNav";
 
 export default function assignments(){
-    const { role } = useAuth();
+    const { role, teacherID } = useAuth();
     const [assignments, setassignments]=useState<Assignment[]>([]);
     const [filterAssignments, setFilterAssignments]=useState<Assignment[]>([]);
     const [loading, setLoading]=useState(true);
     const [error, setError]=useState<string | null>(null);
     const [errorServer, setErrorServer]=useState<string>();
 
-    const fetchAssignments = () =>{
+    const fetchAssignments = async () => {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:3000/assignments`)
-            .then((response) => {
-                if (response.status === 404) {
-                    setErrorServer("A kért erőforrás nem található (404)!");
-                }
-                if (!response.ok) {
-                    setErrorServer(`Server responded with status ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setassignments(data);
-                setFilterAssignments(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                setError(error.message);
-            });
+        try {
+            let url = "http://localhost:3000/assignments";
+            if (role === "teacher") {
+                const teacherResponse = await fetch(`http://localhost:3000/teachers/${teacherID}`);
+                if (!teacherResponse.ok) throw new Error("Failed to fetch teacher details");
+
+                const teacherData = await teacherResponse.json();
+                url = `http://localhost:3000/assignments?subject=${encodeURIComponent(teacherData.subjectTeacher)}`;
+            }
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
+
+            const data = await response.json();
+            setassignments(data);
+            setFilterAssignments(data);
+        } catch (error: any) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         fetchAssignments();
-    }, []);
+    }, [teacherID, role]);
 
     if (errorServer) {
         return <p>{errorServer}</p>;

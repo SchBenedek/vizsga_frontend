@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Assignment, Teacher } from "../libs/types";
-import { TeacherPageNav } from "../Navbar/TeacherPageNav";
-import { useAuth } from "../Login/LoginContext";
-import { StudentPageNav } from "../Navbar/StudentPageNav";
+import { Assignment, Teacher } from "../../libs/types";
+import { TeacherPageNav } from "../../Navbar/TeacherPageNav";
+import { useAuth } from "../../Login/LoginContext";
+import { StudentPageNav } from "../../Navbar/StudentPageNav";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -30,7 +30,8 @@ export default function TeacherMain() {
 
                 const data = await response.json();
                 setTeacher(data);
-                setFilterAssignments(data.assignments || []);
+                const filtered = data.assignments?.filter((assignment: Assignment) => assignment.subject === data.subjectTeacher) || [];
+                setFilterAssignments(filtered);
             } catch (error: any) {
                 setError(error.message);
             } finally {

@@ -9,9 +9,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Startpage from './components/Pages/Startpage.tsx';
 import Assigments from './components/Pages/Assigments.tsx';
 import { AuthProvider } from './components/Login/LoginContext.tsx';
-import StudentMain from './components/Pages/StudentMain.tsx';
-import TeacherMain from './components/Pages/TeacherMain.tsx';
-import Teachers from './components/Pages/StudentsTeacherChoice.tsx';
+import StudentMain from './components/Pages/Student/StudentMain.tsx';
+import TeacherMain from './components/Pages/Teacher/TeacherMain.tsx';
+import Teachers from './components/Pages/Student/StudentsTeacherChoice.tsx';
 
 const router=createBrowserRouter([
   {

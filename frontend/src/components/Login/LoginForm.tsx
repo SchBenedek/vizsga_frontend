@@ -57,7 +57,7 @@ function LoginForm() {
     <Form onSubmit={handleSubmit}>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form.Group>
-        <Form.Label>Oldal tanároknak</Form.Label>
+        <Form.Label>{localRole === "teacher" ? "Oldal tanároknak" : "Oldal diákoknak"}</Form.Label>
         <Form.Control
           as="select"
           value={localRole}

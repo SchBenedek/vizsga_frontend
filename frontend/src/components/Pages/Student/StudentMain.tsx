@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Assignment, Student } from "../libs/types";
-import { StudentPageNav } from "../Navbar/StudentPageNav";
-import { useAuth } from "../Login/LoginContext";
+import { Assignment, Student } from "../../libs/types";
+import { StudentPageNav } from "../../Navbar/StudentPageNav";
+import { useAuth } from "../../Login/LoginContext";
 
 export default function StudentMain() {
     const { studentID } = useAuth();

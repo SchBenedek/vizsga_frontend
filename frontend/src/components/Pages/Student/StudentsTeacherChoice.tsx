@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { StudentPageNav } from "../Navbar/StudentPageNav";
-import { useAuth } from "../Login/LoginContext";
-import { Assignment, Teacher } from "../libs/types";
+import { StudentPageNav } from "../../Navbar/StudentPageNav";
+import { useAuth } from "../../Login/LoginContext";
+import { Assignment, Teacher } from "../../libs/types";
 import { Link, Navigate } from "react-router-dom";
 
 export default function Teachers() {
