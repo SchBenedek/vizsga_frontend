@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Assignment } from "../libs/types";
 import { sortAssignments } from "../libs/utils";
 import Logout from "../Login/Logout";
+import { useLocation } from "react-router-dom";
 
 interface Props {
     assignments: Assignment[];
@@ -9,8 +10,9 @@ interface Props {
 }
 
 export const TeacherPageNav = ({ assignments, setFilterAssignments }: Props) => {
-    const [sortConfig, setSortConfig] = useState<{ key: keyof Assignment; direction: "asc" | "desc" } | null>(null);
+    const [sortConfig, setSortConfig] = useState<{ key: keyof Assignment; direction: "asc" | "desc" }>();
     const [teacherName, setTeacherName] = useState<string>("Teacher");
+    const location = useLocation();
 
     useEffect(() => {
         const storedName = localStorage.getItem("teacherName");
@@ -24,7 +26,7 @@ export const TeacherPageNav = ({ assignments, setFilterAssignments }: Props) => 
         if (sortConfig?.key === key && sortConfig.direction === "asc") {
             direction = "desc";
         }
-        const { sortedAssignments } = sortAssignments(key, direction, assignments);
+        const { sortedAssignments } = sortAssignments(key, direction, [...assignments]);
         setFilterAssignments(sortedAssignments);
         setSortConfig({ key, direction });
     };
@@ -37,21 +39,19 @@ export const TeacherPageNav = ({ assignments, setFilterAssignments }: Props) => 
             <hr />
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item">
-                    <a href="/teachers/dashboard" className="nav-link active">Főoldal</a>
+                    <a href="/teachers/dashboard" className={`nav-link ${location.pathname === "/teachers/dashboard" ? "active" : "text-white"}`}>Főoldal</a>
                 </li>
-                <li><a href="#" className="nav-link text-white">Diákok</a></li>
-                <li><a href="/assigments" className="nav-link text-white">Feladatok</a></li>
-                <li><a href="#" className="nav-link text-white">Kiadott feladatok</a></li>
-                <li><a href="#" className="nav-link text-white">Visszaküldött feladatok</a></li>
-                <li className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle text-primary" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Rendezés
-                    </a>
-                    <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li>
-                            <a className="dropdown-item" href="#" onClick={() => handleSort("ageGroup")}>Korosztály</a>
-                        </li>
-                    </ul>
+                <li>
+                    <a href="#" className={`nav-link ${location.pathname === "/students" ? "active" : "text-white"}`}>Diákok</a>
+                </li>
+                <li>
+                    <a href="/assigments" className={`nav-link ${location.pathname === "/assigments" ? "active" : "text-white"}`}>Feladatok</a>
+                </li>
+                <li>
+                    <a href="#" className={`nav-link ${location.pathname === "/issued-tasks" ? "active" : "text-white"}`}>Kiadott feladatok</a>
+                </li>
+                <li>
+                    <a href="#" className={`nav-link ${location.pathname === "/returned-tasks" ? "active" : "text-white"}`}>Visszaküldött feladatok</a>
                 </li>
             </ul>
             <hr />

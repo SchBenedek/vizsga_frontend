@@ -43,6 +43,10 @@ export default function assignments(){
         fetchAssignments();
     }, [teacherID, role]);
 
+    useEffect(() => {
+        setFilterAssignments(assignments);
+    }, [assignments]);
+    
     if (errorServer) {
         return <p>{errorServer}</p>;
     }
@@ -56,13 +60,13 @@ export default function assignments(){
     return (
         <div className="d-flex" style={{ height: "100vh" }}>
             {role === "teacher" ? (
-                <TeacherPageNav assignments={assignments} setFilterAssignments={setFilterAssignments} />
+                <TeacherPageNav assignments={filterAssignments} setFilterAssignments={setFilterAssignments} />
             ) : (
                 <StudentPageNav assignments={assignments} setFilterAssignments={setFilterAssignments} />
             )}
             <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1 }}>
                 <div className="row">
-                    {assignments.map((assignment) => (
+                    {filterAssignments.map((assignment) => (
                         <div className="col-md-6 col-lg-4 mb-4" key={assignment.id}>
                             <div className="card shadow-sm h-100">
                                 <div className="card-body">

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Assignment } from "../libs/types";
 import { sortAssignments } from "../libs/utils";
 import Logout from "../Login/Logout";
+import { Link } from "react-router-dom";
 
 interface Props {
     assignments: Assignment[];
@@ -40,7 +41,9 @@ export const StudentPageNav = ({ assignments, setFilterAssignments }: Props) => 
                     <a href="/studentmain" className="nav-link active">Főoldal</a>
                 </li>
                 <li><a href="#" className="nav-link text-white">Értékelésed</a></li>
-                <li><a href="teachers" className="nav-link text-white">Tanárok</a></li>
+                <li>
+                    <Link to="/teachers" className="nav-link text-white">Tanárok</Link>
+                </li>
                 <li><a href="#" className="nav-link text-white">Kiadott feladatok</a></li>
                 <li><a href="#" className="nav-link text-white">Visszaküldött feladatok</a></li>
                 <li className="nav-item dropdown">
