@@ -27,7 +27,7 @@ export default function TeacherMain() {
         const token = localStorage.getItem("authToken");
         if (!token) return;
 
-        fetch(`http://localhost:3000/students/${studentID}`, {
+        /*fetch(`http://localhost:3000/students/${studentID}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -38,19 +38,25 @@ export default function TeacherMain() {
         .then((data: Student) => {
             setStudent(data);
         })
-        .catch((error) => console.error("Error fetching student:", error));
+        .catch((error) => console.error("Error fetching student:", error));*/
     }, []);
 
     useEffect(() => {
-        if (!teacherID) return;
 
         const fetchTeacher = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:3000/teachers/${teacherID}`);
+                const response = await fetch(`http://localhost:3000/auth/self`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                    }
+                });
                 if (!response.ok) throw new Error(`Failed to fetch teacher: ${response.status}`);
 
                 const data = await response.json();
+                console.log(data)
                 setTeacher(data);
                 const filtered = data.assignments?.filter((assignment: Assignment) => assignment.subject === data.subjectTeacher) || [];
                 setFilterAssignments(filtered);
@@ -64,7 +70,7 @@ export default function TeacherMain() {
         fetchTeacher();
     }, [teacherID]);
 
-    const addTeacherId = (teacherId: number) => {
+    /*const addTeacherId = (teacherId: number) => {
         if (!student) {
             console.error("Student not found.");
             return;
@@ -90,7 +96,7 @@ export default function TeacherMain() {
             setTimeout(() => setShowSuccess(false), 2000);
         })
         .catch((error) => console.error("Error updating student:", error));
-    };
+    };*/
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -133,9 +139,9 @@ export default function TeacherMain() {
                     ))}
                 </div>
 
-                {routeTeacherID && (
+                {/*routeTeacherID && (
                     <Button onClick={() => addTeacherId(teacher.id)}>Tanulok</Button>
-                )}
+                )*/}
             </main>
         </div>
     );

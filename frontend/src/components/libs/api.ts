@@ -1,17 +1,30 @@
-export const fetchProtectedData = async () => {
-    const token = localStorage.getItem("token");
-  
-    const response = await fetch("http://localhost:3000/protected-route", {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-  
-    if (!response.ok) {
-      throw new Error("Unauthorized access");
+import axios, { AxiosRequestConfig } from "axios";
+
+const apiClient = axios.create({
+  baseURL: "http://localhost:3000/",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json"
+  }
+  , validateStatus: function (statusz) {
+    //console.log(statusz)
+    return true
+  }
+})
+
+export async function useFetch<T>(endpoint: string, method: "GET" | "POST" | "PUT" | "DELETE", body?: Record<string, any>): Promise<{ adat: T | null; statuszKod: number } | null> {
+  const FetchBeallitasok:AxiosRequestConfig = {
+    method,
+    url: endpoint,
+    data: body || undefined,
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("authToken"),
+      "Content-Type": "application/json"
     }
-  
-    return response.json();
-  };
+  }
+  const req = await apiClient.request<T>(FetchBeallitasok)
+  return {
+    adat: req.data, statuszKod: req.status
+  }
+
+}

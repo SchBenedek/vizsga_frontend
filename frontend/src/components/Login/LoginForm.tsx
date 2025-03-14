@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, InputGroup, Alert } from "react-bootstrap";
 import { useAuth } from "../Login/LoginContext";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import SocialLogin from "./SocialLogin";
 function LoginForm() {
   const { setRole, setIsLoggedIn, setTeacherId, setStudentId } = useAuth();
   const navigate = useNavigate();
-  const [localRole, setLocalRole] = useState<string>("teacher");
+  const [localRole, setLocalRole] = useState<string>("student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -22,8 +22,7 @@ function LoginForm() {
     setError(null);
   
     try {
-      const roleEndpoint = localRole === "teacher" ? "teachers" : "students";
-      const response = await fetch(`http://localhost:3000/${roleEndpoint}/login`, {
+      const response = await fetch(`http://localhost:3000/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -32,16 +31,29 @@ function LoginForm() {
       const data = await response.json();
       localStorage.setItem("authToken", data.token);
       if (!response.ok) throw new Error(data.message || "Login failed");
+        const req = await fetch("http://localhost:3000/auth/self", {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("authToken")}` },
+
+        })
+        const self = await req.json()
+
+        console.log(self)
+      
+
   
-      setRole(localRole);
+      setRole(self.role);
+      setLocalRole(self.role);
       setIsLoggedIn(true);
-  
-      if (localRole === "teacher") {
+      
+      if (self.role === "Teacher") {
+        console.log("A felhasználó tanár.")
         localStorage.setItem("token", data.token);
         setTeacherId(data.teacherId);
         setTimeout(() => navigate("/teachers/dashboard"), 0);
       }
-      if (localRole === "student") {
+      if (self.role === "Student") {
+        console.log("A felhasználó tanuló.")
         localStorage.setItem("token", data.token);
         setStudentId(data.studentID);
         navigate("/studentmain");
@@ -56,17 +68,7 @@ function LoginForm() {
   return (
     <Form onSubmit={handleSubmit}>
       {error && <Alert variant="danger">{error}</Alert>}
-      <Form.Group>
-        <Form.Label>{localRole === "teacher" ? "Oldal tanároknak" : "Oldal diákoknak"}</Form.Label>
-        <Form.Control
-          as="select"
-          value={localRole}
-          onChange={(e) => setLocalRole(e.target.value)}
-        >
-          <option value="teacher">Tanár</option>
-          <option value="student">Diák</option>
-        </Form.Control>
-      </Form.Group>
+
 
         <Form.Group>
           <Form.Label>Email</Form.Label>
