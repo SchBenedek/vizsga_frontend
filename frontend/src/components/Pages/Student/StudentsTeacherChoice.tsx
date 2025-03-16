@@ -17,7 +17,7 @@ export default function Teachers() {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:3000/teachers`,{
+        fetch(`http://localhost:3000/users`,{
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -71,12 +71,12 @@ export default function Teachers() {
                             <div className="card shadow-sm h-100">
                                 <div className="card-body">
                                     <h5 className="card-title font-weight-bold text-primary">
-                                        {teacher.name}
+                                        {teacher.user.firstName} {teacher.user.lastName}
                                     </h5>
                                     <p className="card-text text-muted">
-                                        <strong>Szakterület:</strong> {teacher.subjectTeacher}
+                                        <strong>Szakterület:</strong> {teacher.subject}
                                         <br />
-                                        <strong>Email:</strong> {teacher.email}
+                                        <strong>Email:</strong> {teacher.user.email}
                                     </p>
                                     <Link to={`/student/teacher/${teacher.id}`}>
                                         <button className="btn btn-primary">

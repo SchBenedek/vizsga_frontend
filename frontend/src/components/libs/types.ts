@@ -1,8 +1,8 @@
-export interface Profile{
+export interface User{
     id: number;
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    username: string
     password: string;
     role: string;
 }
@@ -11,26 +11,24 @@ export interface Assignment{
     id: number;
     subject: string;
     ageGroup: string;
-    assignments: string;
+    description: string;
+    teacher: Teacher;
+    teacherId: number;
+    students: Student[];
 }
 
 export interface Teacher{
     id: number;
-    name: string;
-    subjectTeacher: string;
+    user: User;
+    subject: string;
     hourlyRate: number;
-    email: string;
-    numberOfStudents: number;
     rating: number;
-    password: string;
-    role: string;
+    assignment: string[];
 }
 
 export interface Student{
     id: number;
-    name: string;
-    email: string;
+    user: User;
     ageGroup: string;
-    password: string;
-    role: string;
+    studentsAssignment: string[];
 }

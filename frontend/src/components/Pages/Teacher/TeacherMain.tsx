@@ -128,9 +128,9 @@ export default function TeacherMain() {
             )}
 
             <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1 }}>
-                <h1>{routeTeacherID ? `${teacher.name}` : `Welcome back, ${teacher.name}!`}</h1>
-                <h3>{teacher.email}</h3>
-                {routeTeacherID ? <h3>{teacher.subjectTeacher}</h3> : <hr />}
+                <h1>{routeTeacherID ? `${teacher.user.firstName} ${teacher.user.lastName}` : `Welcome back, ${teacher.user.firstName} ${teacher.user.lastName}!`}</h1>
+                <h3>{teacher.user.email}</h3>
+                {routeTeacherID ? <h3>{teacher.subject}</h3> : <hr />}
 
                 <div>
                     <h4>{routeTeacherID ? "Rating:" : "Your Rating:"}</h4>

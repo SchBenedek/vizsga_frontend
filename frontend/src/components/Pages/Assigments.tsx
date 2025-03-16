@@ -76,7 +76,7 @@ export default function assignments(){
                                     <p className="card-text text-muted">
                                         <strong>Korosztály:</strong> {assignment.ageGroup}
                                         <br />
-                                        <strong>Leírás:</strong> {assignment.assignments}
+                                        <strong>Leírás:</strong> {assignment.description}
                                         <br />
                                     </p>
                                 </div>
