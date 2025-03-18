@@ -1,10 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const apiClient = axios.create({
+const client = axios.create({
   baseURL: "http://localhost:3000/",
-  withCredentials: true,
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   }
   , validateStatus: function (statusz) {
     //console.log(statusz)
@@ -22,7 +21,7 @@ export async function useFetch<T>(endpoint: string, method: "GET" | "POST" | "PU
       "Content-Type": "application/json"
     }
   }
-  const req = await apiClient.request<T>(FetchBeallitasok)
+  const req = await client.request<T>(FetchBeallitasok)
   return {
     adat: req.data, statuszKod: req.status
   }

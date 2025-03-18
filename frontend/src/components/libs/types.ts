@@ -3,7 +3,7 @@ export interface User{
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
+    password?: string;
     role: string;
 }
 
@@ -17,18 +17,13 @@ export interface Assignment{
     students: Student[];
 }
 
-export interface Teacher{
-    id: number;
-    user: User;
+export interface Teacher extends User{
     subject: string;
     hourlyRate: number;
     rating: number;
     assignment: string[];
 }
 
-export interface Student{
-    id: number;
-    user: User;
+export interface Student extends User{
     ageGroup: string;
-    studentsAssignment: string[];
 }

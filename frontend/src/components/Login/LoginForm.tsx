@@ -48,14 +48,14 @@ function LoginForm() {
       
       if (self.role === "Teacher") {
         console.log("A felhasználó tanár.")
-        localStorage.setItem("token", data.token);
-        setTeacherId(data.teacherId);
+        localStorage.setItem("token", self.token);
+        setTeacherId(self.id);
         setTimeout(() => navigate("/teachers/dashboard"), 0);
       }
       if (self.role === "Student") {
-        console.log("A felhasználó tanuló.")
-        localStorage.setItem("token", data.token);
-        setStudentId(data.studentID);
+        console.log("A felhasználó tanuló.");
+        localStorage.setItem("token", self.token);
+        setStudentId(self.id);
         navigate("/studentmain");
       }
   

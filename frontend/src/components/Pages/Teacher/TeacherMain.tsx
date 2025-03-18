@@ -5,6 +5,7 @@ import { TeacherPageNav } from "../../Navbar/TeacherPageNav";
 import { useAuth } from "../../Login/LoginContext";
 import { StudentPageNav } from "../../Navbar/StudentPageNav";
 import { Button } from "react-bootstrap";
+import { useFetch } from "../../libs/api";
 
 export default function TeacherMain() {
     const { teacherID: authTeacherID } = useAuth();
@@ -26,81 +27,41 @@ export default function TeacherMain() {
     useEffect(() => {
         const token = localStorage.getItem("authToken");
         if (!token) return;
-
-        /*fetch(`http://localhost:3000/students/${studentID}`, {
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((response) => {
-            if (!response.ok) throw new Error(`Failed to fetch student: ${response.status}`);
-            return response.json();
-        })
-        .then((data: Student) => {
-            setStudent(data);
-        })
-        .catch((error) => console.error("Error fetching student:", error));*/
-    }, []);
-
-    useEffect(() => {
-
-        const fetchTeacher = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`http://localhost:3000/auth/self`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                    }
-                });
-                if (!response.ok) throw new Error(`Failed to fetch teacher: ${response.status}`);
-
-                const data = await response.json();
-                console.log(data)
-                setTeacher(data);
-                const filtered = data.assignments?.filter((assignment: Assignment) => assignment.subject === data.subjectTeacher) || [];
-                setFilterAssignments(filtered);
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchTeacher();
-    }, [teacherID]);
-
-    /*const addTeacherId = (teacherId: number) => {
-        if (!student) {
-            console.error("Student not found.");
-            return;
+      }, [teacherID]);
+    
+      const fetchTeacher = async () => {
+        try {
+          setLoading(true);
+    
+          const response = await useFetch<Teacher | null>(
+            `http://localhost:3000/auth/self`,
+            "GET"
+          );
+    
+          if (!response || response.statuszKod !== 200) {
+            throw new Error(`Failed to fetch teacher: ${response?.statuszKod}`);
+          }
+    
+          const data = response.adat;
+    
+          if (!data) {
+            throw new Error("No student data received.");
+          }
+    
+          console.log(data);
+          setTeacher(data);
+        } catch (error: any) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
         }
-
-        const token = localStorage.getItem("authToken");
-
-        fetch(`http://localhost:3000/students/${student.id}`, {
-            method: "PATCH",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ teacherId }),
-        })
-        .then((response) => {
-            if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
-            return response.json();
-        })
-        .then((data: Student) => {
-            setStudent(data);
-            setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 2000);
-        })
-        .catch((error) => console.error("Error updating student:", error));
-    };*/
+      };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!teacher) return <p>No teacher found.</p>;
+    if (teacher)
 
     return (
         <div className="d-flex" style={{ height: "100vh" }}>
@@ -128,8 +89,8 @@ export default function TeacherMain() {
             )}
 
             <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1 }}>
-                <h1>{routeTeacherID ? `${teacher.user.firstName} ${teacher.user.lastName}` : `Welcome back, ${teacher.user.firstName} ${teacher.user.lastName}!`}</h1>
-                <h3>{teacher.user.email}</h3>
+                <h1>{routeTeacherID ? `${teacher.firstName} ${teacher.lastName}` : `Welcome back, ${teacher.firstName} ${teacher.lastName}!`}</h1>
+                <h3>{teacher.email}</h3>
                 {routeTeacherID ? <h3>{teacher.subject}</h3> : <hr />}
 
                 <div>
