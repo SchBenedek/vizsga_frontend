@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import SocialLogin from "./SocialLogin";
 
 function LoginForm() {
-  const { setRole, setIsLoggedIn, setTeacherId, setStudentId } = useAuth();
+  const { setRole, setIsLoggedIn, setTeacherId, setStudentId, setTeacherSubject } = useAuth();
   const navigate = useNavigate();
   const [localRole, setLocalRole] = useState<string>("student");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +25,7 @@ function LoginForm() {
       const response = await fetch(`http://localhost:3000/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
   
       const data = await response.json();
@@ -47,7 +47,8 @@ function LoginForm() {
       setIsLoggedIn(true);
       
       if (self.role === "Teacher") {
-        console.log("A felhasználó tanár.")
+        console.log("A felhasználó tanár.");
+        setTeacherSubject(self.subject);
         localStorage.setItem("token", self.token);
         setTeacherId(self.id);
         setTimeout(() => navigate("/teachers/dashboard"), 0);
@@ -74,8 +75,8 @@ function LoginForm() {
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
             placeholder="Email cím"
           />

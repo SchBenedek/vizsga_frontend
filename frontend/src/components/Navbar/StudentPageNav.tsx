@@ -38,11 +38,11 @@ export const StudentPageNav = ({ assignments, setFilterAssignments }: Props) => 
             <hr />
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item">
-                    <a href="/studentmain" className="nav-link active">Főoldal</a>
+                    <a href="/studentmain" className={`nav-link ${location.pathname === "/studentmain" ? "active" : "text-white"}`}>Főoldal</a>
                 </li>
                 <li><a href="#" className="nav-link text-white">Értékelésed</a></li>
                 <li>
-                    <Link to="/teachers" className="nav-link text-white">Tanárok</Link>
+                <a href="/teachers" className={`nav-link ${location.pathname === "/teachers" ? "active" : "text-white"}`}>Tanárok</a>
                 </li>
                 <li><a href="#" className="nav-link text-white">Kiadott feladatok</a></li>
                 <li><a href="#" className="nav-link text-white">Visszaküldött feladatok</a></li>

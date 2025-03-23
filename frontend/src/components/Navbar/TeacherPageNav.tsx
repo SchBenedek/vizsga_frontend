@@ -42,7 +42,7 @@ export const TeacherPageNav = ({ assignments, setFilterAssignments }: Props) => 
                     <a href="/teachers/dashboard" className={`nav-link ${location.pathname === "/teachers/dashboard" ? "active" : "text-white"}`}>Főoldal</a>
                 </li>
                 <li>
-                    <a href="#" className={`nav-link ${location.pathname === "/students" ? "active" : "text-white"}`}>Diákok</a>
+                    <a href="/teacher/students" className={`nav-link ${location.pathname === "/teacher/students" ? "active" : "text-white"}`}>Diákok</a>
                 </li>
                 <li>
                     <a href="/assigments" className={`nav-link ${location.pathname === "/assigments" ? "active" : "text-white"}`}>Feladatok</a>

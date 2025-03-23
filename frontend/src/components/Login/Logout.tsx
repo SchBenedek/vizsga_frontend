@@ -10,6 +10,7 @@ function Logout(){
     setRole("");
 
     localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
     localStorage.removeItem("teacherName");
 

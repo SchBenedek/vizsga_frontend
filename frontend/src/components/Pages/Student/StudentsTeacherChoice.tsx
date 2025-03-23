@@ -5,19 +5,20 @@ import { Assignment, Teacher } from "../../libs/types";
 import { Link, Navigate } from "react-router-dom";
 
 export default function Teachers() {
-    useAuth();
+    const { studentID } = useAuth();
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [filterTeachers, setFilterTeachers] = useState<Teacher[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [errorServer, setErrorServer] = useState<string | null>(null);
     const token = localStorage.getItem("authToken");
+    const [selectedTId, setSelectedTId] = useState<number | null>(null);
 
     const fetchTeachers = () => {
         setLoading(true);
         setError(null);
 
-        fetch(`http://localhost:3000/users`,{
+        fetch(`http://localhost:3000/users/teachers`,{
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -34,6 +35,7 @@ export default function Teachers() {
                 return response.json();
             })
             .then((data: Teacher[]) => {
+                console.log(data);
                 setTeachers(data);
                 setFilterTeachers(data);
                 setLoading(false);
@@ -47,6 +49,35 @@ export default function Teachers() {
     useEffect(() => {
         fetchTeachers();
     }, []);
+
+    const handleSelectTeacher = async (teacherId: number) => {
+        try {
+            const response = await fetch(`http://localhost:3000/users/selectTeacher`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    studentId: studentID,
+                    sTeacherId: teacherId,
+                }),
+            });
+            console.log("s ID: ", studentID);
+            console.log("t ID: ", teacherId);
+    
+            if (!response.ok) {
+                throw new Error("Failed to select teacher");
+            }
+            
+            setSelectedTId(teacherId);
+            alert("Teacher selected successfully!");
+        } catch (error) {
+            console.error("Error selecting teacher:", error);
+            alert("Error selecting teacher");
+        }
+    };
+    
 
     if (errorServer) {
         return <p>{errorServer}</p>;
@@ -71,18 +102,21 @@ export default function Teachers() {
                             <div className="card shadow-sm h-100">
                                 <div className="card-body">
                                     <h5 className="card-title font-weight-bold text-primary">
-                                        {teacher.user.firstName} {teacher.user.lastName}
+                                        {teacher.firstName} {teacher.lastName}
                                     </h5>
                                     <p className="card-text text-muted">
-                                        <strong>Szakterület:</strong> {teacher.subject}
+                                        <strong>Szakterület:</strong> {teacher.teacher.subject}
                                         <br />
-                                        <strong>Email:</strong> {teacher.user.email}
+                                        <strong>Email:</strong> {teacher.email}
+                                        <br />
+                                        <strong>Óradíj:</strong> {teacher.teacher.hourlyRate} Ft
                                     </p>
-                                    <Link to={`/student/teacher/${teacher.id}`}>
-                                        <button className="btn btn-primary">
-                                            Tanulok tőle
-                                        </button>
-                                    </Link>
+                                    {selectedTId!=teacher.id ?
+                                        <button className="btn btn-primary" onClick={() => handleSelectTeacher(teacher.id)}>
+                                        Tanulok tőle
+                                        </button> : 
+                                        <h5><i>Your teacher</i></h5>
+                                    }
                                 </div>
                             </div>
                         </div>
