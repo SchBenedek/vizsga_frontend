@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../Login/LoginContext";
 import { Student } from "../../libs/types";
 import { TeacherPageNav } from "../../Navbar/TeacherPageNav";
+import { useNavigate } from "react-router-dom";
 
 export default function TeacherStudents() {
     const { role } = useAuth();
@@ -9,6 +10,7 @@ export default function TeacherStudents() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const token = localStorage.getItem("authToken");
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (role !== "Teacher") return;
@@ -37,6 +39,11 @@ export default function TeacherStudents() {
             });
     }, [role, token]);
 
+    const handleClick = (id: number) => {
+        localStorage.setItem("choosenStudent", id.toString());
+        navigate('/choosenStudent');
+    }
+
     if (role !== "Teacher") return <p>Unauthorized: Only teachers can view this page.</p>;
     if (loading) return <p>Loading students...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -50,7 +57,7 @@ export default function TeacherStudents() {
             ) : (
                 <div className="row">
                     {students.map((student) => (
-                        <div className="col-md-6 col-lg-4 mb-4" key={student.id}>
+                        <div className="col-md-6 col-lg-4 mb-4" key={student.id} onClick={() => {handleClick(student.id)}}>
                             <div className="card shadow-sm h-100">
                                 <div className="card-body">
                                     <h5 className="card-title font-weight-bold text-primary">

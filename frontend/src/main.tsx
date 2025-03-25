@@ -14,6 +14,8 @@ import TeacherMain from './components/Pages/Teacher/TeacherMain.tsx';
 import Teachers from './components/Pages/Student/StudentsTeacherChoice.tsx';
 import TeacherStudents from './components/Pages/Teacher/TeachersStudents.tsx';
 import AssignmentCard from './components/Pages/Assignment/AssignmentCard.tsx';
+import ChoosenStudent from './components/Pages/Teacher/ChoosenStudent.tsx';
+import AssignedTasks from './components/Pages/Assignment/AssignedTasks.tsx';
 
 const router=createBrowserRouter([
   {
@@ -47,6 +49,14 @@ const router=createBrowserRouter([
   {
     path: "/teacher/students",
     element: <TeacherStudents />
+  },
+  {
+    path: "/choosenStudent",
+    element: <ChoosenStudent />
+  },
+  {
+    path: "/assignedTasks",
+    element: <AssignedTasks />
   }
 ])
 

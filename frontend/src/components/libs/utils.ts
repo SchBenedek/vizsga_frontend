@@ -20,6 +20,5 @@ export const sortAssignments = (
       return 0;
     });
     return { sortedAssignments };
-  };
-  
+  };  
 

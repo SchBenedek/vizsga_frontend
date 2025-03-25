@@ -10,6 +10,7 @@ export interface User{
 export interface Assignment{
     id: number;
     subject: string;
+    name: string;
     ageGroup: string;
     description: string;
     teacher: Teacher;
