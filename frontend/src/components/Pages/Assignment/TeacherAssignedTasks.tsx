@@ -4,7 +4,7 @@ import { TeacherPageNav } from "../../Navbar/TeacherPageNav";
 import { useAuth } from "../../Login/LoginContext";
 import { useNavigate } from "react-router-dom";
 
-export default function AssignedTasks() {
+export default function TeacherAssignedTasks() {
   const { role } = useAuth();
   const [assignedTasks, setAssignedTasks] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);

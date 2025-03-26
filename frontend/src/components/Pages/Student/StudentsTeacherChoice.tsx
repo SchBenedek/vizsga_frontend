@@ -77,6 +77,33 @@ export default function Teachers() {
             alert("Error selecting teacher");
         }
     };
+
+    const getIfTeacher = async () =>{
+        try {
+            const response = await fetch(`http://localhost:3000/users/${studentID}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            console.log("data at teacherchoice: ", data);
+    
+            if (!response.ok) {
+                throw new Error("Failed to select teacher");
+            }
+            
+            setSelectedTId(data.sTeacherId);
+        } catch (error) {
+            console.error("Error selecting teacher:", error);
+            alert("Error selecting teacher");
+        }
+    }
+
+    useEffect(() => {
+        getIfTeacher();
+    }, []);
     
 
     if (errorServer) {
