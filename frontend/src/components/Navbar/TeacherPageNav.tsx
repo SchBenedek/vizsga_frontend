@@ -51,7 +51,7 @@ export const TeacherPageNav = ({ assignments, setFilterAssignments }: Props) => 
                     <a href="/teacherAssignedTasks" className={`nav-link ${location.pathname === "/teacherAssignedTasks" ? "active" : "text-white"}`}>Kiadott feladatok</a>
                 </li>
                 <li>
-                    <a href="#" className={`nav-link ${location.pathname === "/returned-tasks" ? "active" : "text-white"}`}>Visszaküldött feladatok</a>
+                    <a href="/turnedInTasks" className={`nav-link ${location.pathname === "/turnedInTasks" ? "active" : "text-white"}`}>Visszaküldött feladatok</a>
                 </li>
             </ul>
             <hr />

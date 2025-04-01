@@ -22,7 +22,8 @@ export default function TeacherAssignedTasks() {
         throw new Error(`Server responded with status ${response.status}`);
 
       const data = await response.json();
-      setAssignedTasks(data);
+      const filteredTasks = data.filter((task: Assignment) => !task.completed);
+      setAssignedTasks(filteredTasks);
       console.log(data);
     } catch (error: any) {
       setError(error.message);
@@ -36,6 +37,9 @@ export default function TeacherAssignedTasks() {
       fetchAssignedTasks();
     }
   }, [role]);
+
+  if(loading) return <p>Loading...</p>
+  if(error) return <p>Error: {error}</p>
 
   return (
     <div className="d-flex" style={{ height: "100vh" }}>
