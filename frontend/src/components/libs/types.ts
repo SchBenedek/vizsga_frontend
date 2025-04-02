@@ -18,6 +18,13 @@ export interface Assignment{
     students: Student[];
 }
 
+export interface MarkedAssignment{
+    assignmentId: number;
+    completed: boolean;
+    mark: number;
+    studenId: number;
+}
+
 export interface Teacher extends User{
     subject: string;
     hourlyRate: number;

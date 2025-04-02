@@ -48,7 +48,7 @@ export const StudentPageNav = ({ assignments, setFilterAssignments }: Props) => 
                     <a href="/studentAssignedTasks" className={`nav-link ${location.pathname === "/studentAssignedTasks" ? "active" : "text-white"}`}>Kiadott feladatok</a>
                 </li>
                 <li>
-                    <a href="#" className="nav-link text-white">Visszaküldött feladatok</a>
+                    <a href="/markedAssignments" className={`nav-link ${location.pathname === "/markedAssignments" ? "active" : "text-white"}`}>Visszaküldött feladatok</a>
                 </li>
                 <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle text-primary" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
