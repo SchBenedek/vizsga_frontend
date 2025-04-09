@@ -19,8 +19,7 @@ export default function MarkedTasks() {
         );
         const data = await response.json();
         setMarkedAssignments(data);
-
-        // Fetch assignments using assignment IDs
+        
         const assignmentIds = data.map(
           (item: MarkedAssignment) => item.assignmentId
         );
@@ -83,7 +82,18 @@ export default function MarkedTasks() {
             })}
           </div>
         ) : (
-          <p>No marked assignments found.</p>
+          <div className="text-center mt-5">
+            <div className="alert alert-info p-4 shadow-sm" role="alert">
+              <p className="display-1">🗿</p>
+              <h4 className="alert-heading text-primary">
+                Nincs értékelt beadandód!
+              </h4>
+              <p className="mb-0">
+                Úgy tűnik, még egyetlen beadandódat sem értékelték. Nézz vissza
+                később!
+              </p>
+            </div>
+          </div>
         )}
       </main>
     </div>

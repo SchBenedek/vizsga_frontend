@@ -1,80 +1,129 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
-import SocialLogin from "./SocialLogin";
+import { Level, Subjects } from "../libs/types";
+import { useAuth } from "./LoginContext";
 
 function RegisterForm() {
   const navigate = useNavigate();
-  const [role, setRole] = useState<string>("teacher");
-  const [name, setName] = useState("");
+  const [localRole, setLocalRole] = useState<string>("teacher");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [ageGroup, setAgeGroup] = useState("");
   const [subjectTeacher, setSubjectTeacher] = useState("");
   const [hourlyRate, setHourlyRate] = useState("");
-  const [numberOfStudents, setNumberOfStudents] = useState("");
-  const [rating, setRating] = useState("");
-  const [assignmentId, setAssignmentId] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [repeatPasswordVisible, setRepeatPasswordVisible] = useState(false);
+  const {
+    role,
+    setRole,
+    setIsLoggedIn,
+    setTeacherId,
+    setStudentId,
+    setTeacherSubject,
+  } = useAuth();
 
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
-  const toggleRepeatPasswordVisibility = () => setRepeatPasswordVisible(!repeatPasswordVisible);
+  const toggleRepeatPasswordVisibility = () =>
+    setRepeatPasswordVisible(!repeatPasswordVisible);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== repeatPassword) {
-      alert("Passwords do not match");
+      alert("A jelszavak nem egyeznek.");
       return;
     }
 
     try {
-      const roleEndpoint = role === "teacher" ? "teachers" : "students";
-      const bodyData =
-        role === "teacher"
-          ? { name, subjectTeacher, hourlyRate: Number(hourlyRate), email, numberOfStudents: Number(numberOfStudents), rating: Number(rating), password, assignmentId: 0 }
-          : { name, email, password, ageGroup, assignmentId: 0 };
+      const user = {
+        firstName,
+        lastName,
+        email,
+        password,
+        role: role === "teacher" ? "Teacher" : "Student",
+      };
 
-      const response = await fetch(`http://localhost:3000/${roleEndpoint}/create`, {
+      let bodyData;
+
+      if (role === "teacher") {
+        bodyData = {
+          firstName,
+          lastName,
+          email,
+          password,
+          role: "Teacher",
+          subject: subjectTeacher as Subjects,
+          hourlyRate: parseInt(hourlyRate),
+          rating: 0,
+        };
+      } else {
+        bodyData = {
+          firstName,
+          lastName,
+          email,
+          password,
+          role: "Student",
+          ageGroup: ageGroup,
+        };
+      }
+
+      const response = await fetch(`http://localhost:3000/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Registration failed");
+      if (!response.ok)
+        throw new Error(data.message || "Sikertelen regisztráció.");
+      const req = await fetch("http://localhost:3000/auth/self", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      const self = await req.json();
+      localStorage.setItem("authToken", data.token);
+      setRole(self.role);
+      setLocalRole(self.role);
+      setIsLoggedIn(true);
 
-      console.log("Registration successful:", data);
+      if (self.role === "Teacher") {
+        console.log("A felhasználó tanár.");
+        setTeacherSubject(self.subject);
+        localStorage.setItem("token", self.token);
+        setTeacherId(self.id);
+        setTimeout(() => navigate("/teachers/dashboard"), 0);
+      }
+      if (self.role === "Student") {
+        console.log("A felhasználó tanuló.");
+        localStorage.setItem("token", self.token);
+        setStudentId(self.id);
+        navigate("/studentmain");
+      }
+      console.log("Sikeres regisztráció:", data);
       navigate("/");
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("Regisztrációs hiba:", error);
+      alert("Hiba történt a regisztráció során.");
     }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <Row className="mb-3">
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Teljes név</Form.Label>
-            <Form.Control
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="Név"
-            />
-          </Form.Group>
-        </Col>
-
-        <Col md={6}>
+        <Col md={12}>
+          {" "}
           <Form.Group>
             <Form.Label>Tanár/Diák</Form.Label>
             <Form.Control
               as="select"
-              value={role}
+              value={role?.toString()}
               onChange={(e) => setRole(e.target.value)}
             >
               <option value="teacher">Tanár</option>
@@ -84,57 +133,79 @@ function RegisterForm() {
         </Col>
       </Row>
 
+      <Row className="mb-3">
+        <Col md={6}>
+          <Form.Group>
+            <Form.Label>Vezetéknév</Form.Label>
+            <Form.Control
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+              placeholder="Vezetéknév"
+            />
+          </Form.Group>
+        </Col>
+        <Col md={6}>
+          <Form.Group>
+            <Form.Label>Keresztnév</Form.Label>
+            <Form.Control
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+              placeholder="Keresztnév"
+            />
+          </Form.Group>
+        </Col>
+        <Col md={6}>
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="Email cím"
+              />
+            </Form.Group>
+          </Col>
+      </Row>
+
       {role === "teacher" ? (
         <Row className="mb-3">
           <Col md={6}>
             <Form.Group>
               <Form.Label>Tanított tantárgy</Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 value={subjectTeacher}
                 onChange={(e) => setSubjectTeacher(e.target.value)}
                 required
-                placeholder="Tantárgy"
-              />
+              >
+                <option value="">Válassz tantárgyat</option>
+                <option value="Maths">Matematika</option>
+                <option value="History">Történelem</option>
+                <option value="Literature">Irodalom</option>
+                <option value="English">Angol</option>
+                <option value="Science">Természetismeret</option>
+                <option value="Compsci">Informatika</option>
+              </Form.Control>
             </Form.Group>
           </Col>
-
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Óradíj (Ft)</Form.Label>
-              <Form.Control
-                type="number"
-                value={hourlyRate}
-                onChange={(e) => setHourlyRate(e.target.value)}
-                required
-                placeholder="Óradíj"
-              />
-            </Form.Group>
-          </Col>
-
-          <Col md={6}>
-            <Form.Group>
-              <Form.Label>Diákok száma</Form.Label>
-              <Form.Control
-                type="number"
-                value={numberOfStudents}
-                onChange={(e) => setNumberOfStudents(e.target.value)}
-                required
-                placeholder="Diákok száma"
-              />
-            </Form.Group>
-          </Col>
-
-          <Col md={6}>
-            <Form.Group>
-              <Form.Label>Értékelés</Form.Label>
-              <Form.Control
-                type="number"
-                step="0.1"
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                placeholder="Értékelés (0-5)"
-              />
+              <Form.Label>Óradíj</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="number"
+                  value={hourlyRate}
+                  onChange={(e) => setHourlyRate(e.target.value)}
+                  required
+                  placeholder="Óradíj"
+                />
+                <InputGroup.Text className="bg-dark text-white">Ft</InputGroup.Text>
+              </InputGroup>
             </Form.Group>
           </Col>
         </Row>
@@ -144,44 +215,23 @@ function RegisterForm() {
             <Form.Group>
               <Form.Label>Életkor csoport</Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 value={ageGroup}
                 onChange={(e) => setAgeGroup(e.target.value)}
                 required
-                placeholder="Pl: 18-25"
-              />
-            </Form.Group>
-          </Col>
-
-          <Col md={6}>
-            <Form.Group>
-              <Form.Label>Assignment ID</Form.Label>
-              <Form.Control
-                type="number"
-                value={assignmentId}
-                onChange={(e) => setAssignmentId(e.target.value)}
-                required
-                placeholder="Assignment ID"
-              />
+              >
+                <option value="">Válassz korcsoportot</option>
+                <option value="Elementary">Alsó tagozat</option>
+                <option value="Secondary">Felső tagozat</option>
+                <option value="High">Középiskola</option>
+                <option value="University">Egyetem</option>
+              </Form.Control>
             </Form.Group>
           </Col>
         </Row>
       )}
 
       <Row className="mb-3">
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Email cím"
-            />
-          </Form.Group>
-        </Col>
-
         <Col md={6}>
           <Form.Group>
             <Form.Label>Jelszó</Form.Label>
@@ -206,7 +256,6 @@ function RegisterForm() {
             </InputGroup>
           </Form.Group>
         </Col>
-
         <Col md={6}>
           <Form.Group>
             <Form.Label>Jelszó megerősítése</Form.Label>
@@ -233,8 +282,9 @@ function RegisterForm() {
         </Col>
       </Row>
 
-      <SocialLogin />
-      <Button type="submit">Regisztrálok</Button>
+      <Button type="submit" className="w-50 mt-3">
+        Regisztrálok
+      </Button>
     </Form>
   );
 }

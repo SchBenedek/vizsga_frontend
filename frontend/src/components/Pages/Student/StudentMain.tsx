@@ -52,23 +52,36 @@ export default function StudentMain() {
   if (error) return <p>Hiba történt: {error}.</p>;
   if (!student) return <p>Student nem található</p>;
   if (student)
-
-  return (
-    <div className="d-flex" style={{ height: "100vh" }}>
-      <StudentPageNav
-        assignments={filteredAssignments}
-        setFilterAssignments={setFilterAssignments}
-      />
-      <main
-        className="container-fluid p-4 overflow-auto"
-        style={{ flexGrow: 1 }}
+    return (
+      <div
+        className="d-flex"
+        style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
       >
-        <h1>
-          Welcome back, {student.firstName} {student.lastName}!
-        </h1>
-        <h3>{student.email}</h3>
-        <div>Haló</div>
-      </main>
-    </div>
-  );
+        <StudentPageNav
+          assignments={filteredAssignments}
+          setFilterAssignments={setFilterAssignments}
+        />
+
+        <main
+          className="container-fluid p-4 overflow-auto"
+          style={{
+            flexGrow: 1,
+            backgroundColor: "#fff",
+            color: "#212529",
+          }}
+        >
+          <div
+            className="p-4 rounded shadow alert alert-info"
+          >
+            <h1 className="text-primary mb-3">
+              Üdvözlünk, {student.firstName} {student.lastName}!
+            </h1>
+            <h4 className="text-dark">{student.email}</h4>
+            {student.ageGroup !== "University" && (
+              <h5 className="text-secondary">{student.ageGroup}-school</h5>
+            )}
+          </div>
+        </main>
+      </div>
+    );
 }

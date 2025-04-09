@@ -43,8 +43,9 @@ export default function ChoosenStudent() {
 
   const handleAssignment = () => {
     localStorage.setItem("isAssignmentChoice", "true");
-    const name = `${student?.firstName} ${student?.lastName}`
-    localStorage.setItem("studentName", name)
+    const name = `${student?.firstName} ${student?.lastName}`;
+    localStorage.setItem("studentName", name);
+    localStorage.setItem("studentAgeGroup", `${student?.ageGroup}`);
     navigate('/assigments');
   }
 

@@ -28,12 +28,17 @@ export default function StudentAssignedTasks() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:3000/assignments/assigned");
-      if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
+      const response = await fetch(
+        "http://localhost:3000/assignments/assigned"
+      );
+      if (!response.ok)
+        throw new Error(`Server responded with status ${response.status}`);
 
       const data = await response.json();
       console.log(data);
-      const filteredTasks = data.filter((task: Assignment) => task.studentId == studentID && !task.completed);
+      const filteredTasks = data.filter(
+        (task: Assignment) => task.studentId == studentID && !task.completed
+      );
       setAssignedTasks(filteredTasks);
     } catch (error: any) {
       setError(error.message);
@@ -44,15 +49,20 @@ export default function StudentAssignedTasks() {
 
   const completeTask = async (assignmentId: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/assignments/${studentID}/${assignmentId}/complete`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `http://localhost:3000/assignments/${studentID}/${assignmentId}/complete`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(errorMessage);
       }
-      setAssignedTasks(prevTasks => prevTasks.filter(task => task.assignment.id !== assignmentId));
+      setAssignedTasks((prevTasks) =>
+        prevTasks.filter((task) => task.assignment.id !== assignmentId)
+      );
       setShowModal(true);
       setAssignmId(assignmentId);
     } catch (error: any) {
@@ -73,14 +83,14 @@ export default function StudentAssignedTasks() {
       setError("File is required");
       return;
     }
-    
+
     const formData = new FormData();
     selectedFiles.forEach((file) => {
       formData.append("files", file);
     });
     formData.append("studentId", studentID.toString());
-    formData.append("assignmentId", assignmId.toString())
-    
+    formData.append("assignmentId", assignmId.toString());
+
     try {
       const response = await fetch("http://localhost:3000/assignments/upload", {
         method: "POST",
@@ -90,7 +100,7 @@ export default function StudentAssignedTasks() {
       if (!response.ok) {
         throw new Error("File upload failed");
       }
-      
+
       setSelectedFiles([]);
       setError(null);
       setShowModal(false);
@@ -106,19 +116,26 @@ export default function StudentAssignedTasks() {
   return (
     <div className="d-flex" style={{ height: "100vh" }}>
       <StudentPageNav assignments={[]} setFilterAssignments={() => {}} />
-      <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1 }}>
+      <main
+        className="container-fluid p-4 overflow-auto"
+        style={{ flexGrow: 1 }}
+      >
         <div className="row">
           {assignedTasks.map((task) => (
             <div className="col-md-6 col-lg-4 mb-4" key={task.assignment.id}>
               <div className="card shadow-sm h-100">
                 <div className="card-body">
-                  <h5 className="card-title font-weight-bold text-primary">{task.assignment.subject}</h5>
+                  <h5 className="card-title font-weight-bold text-primary">
+                    {task.assignment.subject}
+                  </h5>
                   <p className="card-text text-muted">
                     <strong>Korosztály:</strong> {task.assignment.ageGroup}
                     <br />
                     <strong>Leírás:</strong> {task.assignment.description}
                   </p>
-                  <Button onClick={() => completeTask(task.assignment.id)}>Beadás</Button>
+                  <Button onClick={() => completeTask(task.assignment.id)}>
+                    Beadás
+                  </Button>
                 </div>
               </div>
             </div>
@@ -131,7 +148,11 @@ export default function StudentAssignedTasks() {
           <Modal.Title>Fájl feltöltés</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Button variant="primary" onClick={handleCustomButtonClick} className="mb-3">
+          <Button
+            variant="primary"
+            onClick={handleCustomButtonClick}
+            className="mb-3"
+          >
             Válassz fájlt
           </Button>
           <input
@@ -139,15 +160,24 @@ export default function StudentAssignedTasks() {
             multiple
             ref={fileInputRef}
             onChange={handleFileChange}
-            accept={acceptedFileExtensions.map(ext => `.${ext}`).join(",")}
+            accept={acceptedFileExtensions.map((ext) => `.${ext}`).join(",")}
             style={{ display: "none" }}
           />
           {selectedFiles.length > 0 && (
             <ul className="mt-3">
               {selectedFiles.map((file, index) => (
-                <li key={index} className="d-flex justify-content-between align-items-center">
+                <li
+                  key={index}
+                  className="d-flex justify-content-between align-items-center"
+                >
                   {file.name}
-                  <Button variant="danger" size="sm" onClick={() => handleFileDelete(index)}>X</Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleFileDelete(index)}
+                  >
+                    X
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -155,8 +185,12 @@ export default function StudentAssignedTasks() {
           {error && <p className="text-danger mt-2">{error}</p>}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Mégse</Button>
-          <Button variant="primary" onClick={handleSubmit}>Feltöltés</Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Mégse
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Feltöltés
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

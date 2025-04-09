@@ -46,7 +46,11 @@ export default function TurnedInTasks() {
     }
   };
 
-  const addMark = async (studentId: number, assignmentId: number, mark: number) => {
+  const addMark = async (
+    studentId: number,
+    assignmentId: number,
+    mark: number
+  ) => {
     try {
       const response = await fetch(
         `http://localhost:3000/assignments/${studentId}/${assignmentId}/${mark}/mark`,
@@ -95,19 +99,18 @@ export default function TurnedInTasks() {
   return (
     <div className="d-flex" style={{ height: "100vh" }}>
       <TeacherPageNav assignments={[]} setFilterAssignments={() => {}} />
-      <main
-        className="container-fluid p-4 overflow-auto"
-        style={{ flexGrow: 1 }}
-      >
-        <div className="row">
-          {returnedTasks.length === 0 ? (
-            <p>No tasks have been turned in yet.</p>
-          ) : (
-            returnedTasks.map((task) => (
+      {returnedTasks.length > 0 ? (
+        <main
+          className="container-fluid p-4 overflow-auto"
+          style={{ flexGrow: 1 }}
+        >
+          <h2 className="mb-4 text-dark">Beadott feladatok</h2>
+          <div className="row">
+            {returnedTasks.map((task) => (
               <div className="col-md-6 col-lg-4 mb-4" key={task.assignment.id}>
-                <div className="card shadow-sm h-100">
+                <div className="card shadow-sm h-100 border-0">
                   <div className="card-body">
-                    <h5 className="card-title font-weight-bold text-primary">
+                    <h5 className="card-title text-primary">
                       {task.assignment.subject}
                     </h5>
                     <p className="card-text text-muted">
@@ -115,9 +118,10 @@ export default function TurnedInTasks() {
                       <br />
                       <strong>Leírás:</strong> {task.assignment.description}
                       <br />
-                      <span className="text-success">✔ Beadva</span>
+                      <span className="text-success fw-bold">✔ Beadva</span>
                     </p>
-                    {task.uploadedFiles?.map((file) => (        
+
+                    {task.uploadedFiles?.map((file) => (
                       <Button
                         key={file.fileName}
                         onClick={() =>
@@ -127,45 +131,70 @@ export default function TurnedInTasks() {
                             file.fileName
                           )
                         }
-                        variant="primary"
-                        className="mt-2"
+                        variant="outline-primary"
+                        className="me-2 mb-2"
                       >
                         {file.fileName}
                       </Button>
                     ))}
+
                     <hr />
-                    {task.mark != 0 ? (
-                          <h6 className="mt-2">
-                            <strong>Osztályzat:</strong> {task.mark}
-                          </h6>
-                        ) : (
-                          <Form className="mt-2">
-                            <Form.Group controlId={`markInput`}>
-                              <Form.Control
-                                type="number"
-                                placeholder="Osztályzat"
-                                value={mark}
-                                onChange={(e) => setMark(Number(e.target.value))}
-                              />
-                            </Form.Group>
-                            <Button
-                              variant="primary"
-                              className="mt-2"
-                              onClick={() =>
-                                addMark(task.studentId, task.assignment.id, Number(mark))
-                              }
-                            >
-                              Osztályzat adása
-                            </Button>
-                          </Form>
-                        )}
+
+                    {task.mark !== 0 ? (
+                      <h6 className="mt-2 text-success">
+                        <strong>Osztályzat:</strong> {task.mark}
+                      </h6>
+                    ) : (
+                      <Form className="mt-2">
+                        <Form.Group
+                          controlId={`markInput-${task.assignment.id}`}
+                        >
+                          <Form.Control
+                            type="number"
+                            placeholder="Osztályzat"
+                            value={mark}
+                            onChange={(e) => setMark(Number(e.target.value))}
+                          />
+                        </Form.Group>
+                        <Button
+                          variant="primary"
+                          className="mt-2"
+                          onClick={() =>
+                            addMark(
+                              task.studentId,
+                              task.assignment.id,
+                              Number(mark)
+                            )
+                          }
+                        >
+                          Osztályzat adása
+                        </Button>
+                      </Form>
+                    )}
                   </div>
                 </div>
               </div>
-            ))
-          )}
-        </div>
-      </main>
+            ))}
+          </div>
+        </main>
+      ) : (
+        <main
+          className="container-fluid p-4 overflow-auto"
+          style={{ flexGrow: 1 }}
+        >
+          <div className="text-center mt-5">
+            <div className="alert alert-info p-4 shadow-sm" role="alert">
+              <p className="display-1">📭</p>
+              <h4 className="alert-heading text-primary">
+                Nincs beadott feladat!
+              </h4>
+              <p>
+                Még egyik diák sem töltött fel feladatot. Nézz vissza később!
+              </p>
+            </div>
+          </div>
+        </main>
+      )}
     </div>
   );
 }

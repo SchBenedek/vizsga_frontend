@@ -19,6 +19,7 @@ import TeacherAssignedTasks from './components/Pages/Assignment/TeacherAssignedT
 import StudentAssignedTasks from './components/Pages/Assignment/StudentAssignedTasks.tsx';
 import TurnedInTasks from './components/Pages/Assignment/TurnedInTasks.tsx';
 import MarkedTasks from './components/Pages/Assignment/MarkedTasks.tsx';
+import Rating from './components/Pages/Student/Rating.tsx';
 
 const router=createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router=createBrowserRouter([
   {
     path: '/markedAssignments',
     element: <MarkedTasks />
+  },
+  {
+    path: '/rating',
+    element: <Rating />
   }
 ])
 

@@ -38,15 +38,24 @@ export default function TeacherAssignedTasks() {
     }
   }, [role]);
 
-  if(loading) return <p>Loading...</p>
-  if(error) return <p>Error: {error}</p>
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="d-flex" style={{ height: "100vh" }}>
+    <div
+      className="d-flex"
+      style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
+    >
       <TeacherPageNav assignments={[]} setFilterAssignments={() => {}} />
-      <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1 }}>
-        <h1>Assigned Tasks</h1>
-        <hr></hr>
+      <main
+        className="container-fluid p-4 overflow-auto"
+        style={{ flexGrow: 1, backgroundColor: "#fff", color: "#212529" }}
+      >
+        <div className="p-4 rounded shadow alert alert-info">
+          <h2 className="mb-3 text-dark">Kiosztott feladatok</h2>
+        </div>
+
+        <hr />
         <div className="container">
           {Object.entries(
             assignedTasks.reduce((acc, assignedT) => {
@@ -56,17 +65,19 @@ export default function TeacherAssignedTasks() {
               return acc;
             }, {} as Record<string, typeof assignedTasks>)
           ).map(([studentName, assignments]) => (
-            <div key={studentName} className="mb-4">
-              <h3 className="text-primary">{studentName}</h3>
+            <div key={studentName} className="mb-5">
+              <h4 className="text-primary mb-3">{studentName}</h4>
               <div className="row">
                 {assignments.map((assignment) => (
-                  <div className="col-md-6 col-lg-4 mb-3" key={assignment.id}>
-                    <div className="card shadow-sm h-100">
+                  <div className="col-md-6 col-lg-4 mb-4" key={assignment.id}>
+                    <div className="card shadow-sm h-100 border-0">
                       <div className="card-body">
-                        <h5 className="card-title font-weight-bold text-primary">
+                        <h5 className="card-title text-primary">
                           {assignment.name}
                         </h5>
-                        <p className="card-text">{assignment.description}</p>
+                        <p className="card-text text-muted">
+                          {assignment.description || "Nincs leírás megadva."}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -77,5 +88,5 @@ export default function TeacherAssignedTasks() {
         </div>
       </main>
     </div>
-  );  
+  );
 }

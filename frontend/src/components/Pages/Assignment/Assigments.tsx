@@ -93,8 +93,19 @@ export default function Assignments() {
     };
   }, []);
 
+  useEffect(() => {
+    setFilterAssignments(
+      assignments.filter((a: Assignment) => {
+        a.ageGroup == localStorage.getItem("studentAgeGroup");
+      })
+    );
+  }, []);
+
   return (
-    <div className="d-flex" style={{ height: "100vh" }}>
+    <div
+      className="d-flex"
+      style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
+    >
       {role === "Teacher" ? (
         <TeacherPageNav
           assignments={filterAssignments}
@@ -106,52 +117,69 @@ export default function Assignments() {
           setFilterAssignments={setFilterAssignments}
         />
       )}
+
       <main
         className="container-fluid p-4 overflow-auto"
-        style={{ flexGrow: 1 }}
+        style={{ flexGrow: 1, backgroundColor: "#fff", color: "#212529" }}
       >
         {loading ? (
-          <p>Loading...</p>
+          <p>Loading assignments...</p>
         ) : error ? (
-          <p>Hiba történt: {error}.</p>
+          <p className="text-danger">Hiba történt: {error}</p>
         ) : (
-          <div className="row">
-            {isAssignmentChoosen ? (
-              <h2>Diák: {localStorage.getItem("studentName")}</h2>
-            ) : null}
-            {filterAssignments.map((assignment) => (
-              <div
-                className="col-md-6 col-lg-4 mb-4"
-                key={assignment.id}
-                onClick={() => {
-                  handleClick(assignment.id);
-                }}
-              >
-                <div className="card shadow-sm h-100">
-                  <div className="card-body">
-                    <h5 className="card-title font-weight-bold text-primary">
-                      {assignment.subject}
-                    </h5>
-                    <p className="card-text text-muted">
-                      <strong>Korosztály:</strong> {assignment.ageGroup}
-                      <br />
-                      <strong>Leírás:</strong> {assignment.description}
-                    </p>
-                    {isAssignmentChoosen ? (
-                      <Button
-                        onClick={() => assign(assignment.id)}
-                        disabled={assignedAssignments.includes(assignment.id)}
-                      >
-                        {assignedAssignments.includes(assignment.id)
-                          ? "Already Assigned"
-                          : "Feladat kiadása"}
-                      </Button>
-                    ) : null}
+          <>
+            <div className="p-4 rounded shadow alert alert-info">
+              <h1 className="text-primary">Feladatok</h1>
+            </div>
+            {isAssignmentChoosen && (
+              <div className="mb-3 alert alert-info">
+                <h5 className="mb-0">
+                  Diák: {localStorage.getItem("studentName")}
+                </h5>
+              </div>
+            )}
+            <div className="row">
+              {filterAssignments.map((assignment) => (
+                <div
+                  className="col-md-6 col-lg-4 mb-4"
+                  key={assignment.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleClick(assignment.id)}
+                >
+                  <div className="card h-100 shadow-sm border-0">
+                    <div className="card-body">
+                      <h5 className="card-title text-primary">
+                        {assignment.subject}
+                      </h5>
+                      <p className="card-text text-muted">
+                        <strong>Korosztály:</strong> {assignment.ageGroup}
+                        <br />
+                        <strong>Leírás:</strong> {assignment.description}
+                      </p>
+                      {isAssignmentChoosen && (
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            assign(assignment.id);
+                          }}
+                          disabled={assignedAssignments.includes(assignment.id)}
+                          variant={
+                            assignedAssignments.includes(assignment.id)
+                              ? "secondary"
+                              : "primary"
+                          }
+                        >
+                          {assignedAssignments.includes(assignment.id)
+                            ? "Already Assigned"
+                            : "Feladat kiadása"}
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </main>
     </div>
