@@ -51,41 +51,58 @@ export default function TeacherAssignedTasks() {
         className="container-fluid p-4 overflow-auto"
         style={{ flexGrow: 1, backgroundColor: "#fff", color: "#212529" }}
       >
-        <div className="p-4 rounded shadow alert alert-info">
-          <h2 className="mb-3 text-dark">Kiosztott feladatok</h2>
-        </div>
-
-        <hr />
-        <div className="container">
-          {Object.entries(
-            assignedTasks.reduce((acc, assignedT) => {
-              const studentName = `${assignedT.student.user.firstName} ${assignedT.student.user.lastName}`;
-              if (!acc[studentName]) acc[studentName] = [];
-              acc[studentName].push(assignedT.assignment);
-              return acc;
-            }, {} as Record<string, typeof assignedTasks>)
-          ).map(([studentName, assignments]) => (
-            <div key={studentName} className="mb-5">
-              <h4 className="text-primary mb-3">{studentName}</h4>
-              <div className="row">
-                {assignments.map((assignment) => (
-                  <div className="col-md-6 col-lg-4 mb-4" key={assignment.id}>
-                    <div className="card shadow-sm h-100 border-0">
-                      <div className="card-body">
-                        <h5 className="card-title text-primary">
-                          {assignment.name}
-                        </h5>
-                        <p className="card-text text-muted">
-                          {assignment.description || "Nincs leírás megadva."}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        {assignedTasks.length > 0 ? (
+          <>
+            <div className="p-4 rounded shadow alert alert-info">
+              <h2 className="mb-3 text-dark">Kiosztott feladatok</h2>
             </div>
-          ))}
-        </div>
+
+            <hr />
+            <div className="container">
+              {Object.entries(
+                assignedTasks.reduce((acc, assignedT) => {
+                  const studentName = `${assignedT.student.user.firstName} ${assignedT.student.user.lastName}`;
+                  if (!acc[studentName]) acc[studentName] = [];
+                  acc[studentName].push(assignedT.assignment);
+                  return acc;
+                }, {} as Record<string, typeof assignedTasks>)
+              ).map(([studentName, assignments]) => (
+                <div key={studentName} className="mb-5">
+                  <h4 className="text-primary mb-3">{studentName}</h4>
+                  <div className="row">
+                    {assignments.map((assignment) => (
+                      <div
+                        className="col-md-6 col-lg-4 mb-4"
+                        key={assignment.id}
+                      >
+                        <div className="card shadow-sm h-100 border-0">
+                          <div className="card-body">
+                            <h5 className="card-title text-primary">
+                              {assignment.name}
+                            </h5>
+                            <p className="card-text text-muted">
+                              {assignment.description ||
+                                "Nincs leírás megadva."}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-center mt-5">
+            <div className="alert alert-info p-4 shadow-sm" role="alert">
+              <p className="display-1">😇</p>
+              <h4 className="alert-heading text-primary">
+                Nincs kiadott feladat!
+              </h4>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

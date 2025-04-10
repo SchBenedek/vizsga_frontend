@@ -51,13 +51,16 @@ export default function Rating() {
       if (!sTeacherId) return;
 
       try {
-        const response = await fetch(`http://localhost:3000/users/${sTeacherId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://localhost:3000/users/${sTeacherId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok)
           throw new Error(`Server responded with status ${response.status}`);
@@ -87,18 +90,21 @@ export default function Rating() {
           },
         }
       );
-  
+
       if (res.ok) {
         setMessage("Köszönjük hogy értékeltél!");
-  
-        const updated = await fetch(`http://localhost:3000/users/${sTeacherId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-  
+
+        const updated = await fetch(
+          `http://localhost:3000/users/${sTeacherId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
         if (updated.ok) {
           const updatedData: Teacher = await updated.json();
           setTeacher(updatedData);
@@ -112,50 +118,70 @@ export default function Rating() {
       setMessage("Váratlan hiba történt.");
     }
   };
-  
-
-  if (!sTeacherId || !teacher) return <p>Loading</p>;
 
   return (
-    <div className="d-flex" style={{ height: "100vh", backgroundColor: "#f8f9fa" }}>
+    <div
+      className="d-flex"
+      style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
+    >
       <StudentPageNav assignments={[]} setFilterAssignments={() => {}} />
 
-      <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1, backgroundColor: "#fff" }}>
-        <div className="p-4 rounded shadow alert alert-info">
-          <h2 className="text-primary mb-3">Értékeld a tanárod:</h2>
-          <div className="card p-4 shadow-sm">
-            <h4>
-              {teacher?.firstName} {teacher?.lastName}
-            </h4>
-            <p>Tanított tantárgy: {teacher?.teacher.subject}</p>
-            <p>
-              Jelenlegi értékelés:{" "}
-              <strong>
-                {teacher?.teacher.rating.toFixed(2)} / 10 ({teacher?.teacher.numberOfRatings} rating
-                {teacher?.teacher.numberOfRatings !== 1 && "s"})
-              </strong>
-            </p>
-            <div className="my-3">
-              <label className="form-label">Értékelésed:</label>
-              <select
-                className="form-select w-auto text-center"
-                value={score}
-                onChange={(e) => setScore(parseInt(e.target.value))}
-              >
-                <option value={0}>Válassz</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((s) => (
-                  <option key={s} value={s}>
-                    {s} ⭐
-                  </option>
-                ))}
-              </select>
+      <main
+        className="container-fluid p-4 overflow-auto"
+        style={{ flexGrow: 1, backgroundColor: "#fff" }}
+      >
+        {(sTeacherId || teacher) ? (
+          <div className="p-4 rounded shadow alert alert-info">
+            <h2 className="text-primary mb-3">Értékeld a tanárod:</h2>
+            <div className="card p-4 shadow-sm">
+              <h4>
+                {teacher?.firstName} {teacher?.lastName}
+              </h4>
+              <p>Tanított tantárgy: {teacher?.teacher.subject}</p>
+              <p>
+                Jelenlegi értékelés:{" "}
+                <strong>
+                  {teacher?.teacher.rating.toFixed(2)} / 10 (
+                  {teacher?.teacher.numberOfRatings} rating
+                  {teacher?.teacher.numberOfRatings !== 1 && "s"})
+                </strong>
+              </p>
+              <div className="my-3">
+                <label className="form-label">Értékelésed:</label>
+                <select
+                  className="form-select w-auto text-center"
+                  value={score}
+                  onChange={(e) => setScore(parseInt(e.target.value))}
+                >
+                  <option value={0}>Válassz</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((s) => (
+                    <option key={s} value={s}>
+                      {s} ⭐
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button className="btn btn-primary" onClick={handleRate}>
+                Értékelés adása
+              </button>
+              {message && (
+                <div className="mt-3 alert alert-info">{message}</div>
+              )}
             </div>
-            <button className="btn btn-primary" onClick={handleRate}>
-              Értékelés adása
-            </button>
-            {message && <div className="mt-3 alert alert-info">{message}</div>}
           </div>
-        </div>
+        ) : (
+          <div className="text-center mt-5">
+            <div className="alert alert-info p-4 shadow-sm" role="alert">
+              <p className="display-1">🦍</p>
+              <h4 className="alert-heading text-primary">
+                Még nem választottál tanárt!
+              </h4>
+              <p className="mb-0">
+                Válassz egy tanárt akitől tanulni szeretnél, majd értékeld itt.
+              </p>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

@@ -4,9 +4,7 @@ import { Assignment, MarkedAssignment } from "../../libs/types";
 import { StudentPageNav } from "../../Navbar/StudentPageNav";
 
 export default function MarkedTasks() {
-  const [markedAssignments, setMarkedAssignments] = useState<
-    MarkedAssignment[]
-  >([]);
+  const [markedAssignments, setMarkedAssignments] = useState<MarkedAssignment[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const { studentID } = useAuth();

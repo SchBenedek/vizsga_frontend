@@ -35,11 +35,12 @@ export default function StudentAssignedTasks() {
         throw new Error(`Server responded with status ${response.status}`);
 
       const data = await response.json();
-      console.log(data);
+      console.log("data: ", data);
       const filteredTasks = data.filter(
         (task: Assignment) => task.studentId == studentID && !task.completed
       );
       setAssignedTasks(filteredTasks);
+      console.log("filter: ", filteredTasks);
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -63,8 +64,9 @@ export default function StudentAssignedTasks() {
       setAssignedTasks((prevTasks) =>
         prevTasks.filter((task) => task.assignment.id !== assignmentId)
       );
-      setShowModal(true);
+      console.log(showModal.valueOf.toString());
       setAssignmId(assignmentId);
+      setShowModal(true);
     } catch (error: any) {
       alert(`Error: ${error.message}`);
     }
@@ -116,33 +118,57 @@ export default function StudentAssignedTasks() {
   return (
     <div className="d-flex" style={{ height: "100vh" }}>
       <StudentPageNav assignments={[]} setFilterAssignments={() => {}} />
-      <main
-        className="container-fluid p-4 overflow-auto"
-        style={{ flexGrow: 1 }}
-      >
-        <div className="row">
-          {assignedTasks.map((task) => (
-            <div className="col-md-6 col-lg-4 mb-4" key={task.assignment.id}>
-              <div className="card shadow-sm h-100">
-                <div className="card-body">
-                  <h5 className="card-title font-weight-bold text-primary">
-                    {task.assignment.subject}
-                  </h5>
-                  <p className="card-text text-muted">
-                    <strong>Korosztály:</strong> {task.assignment.ageGroup}
-                    <br />
-                    <strong>Leírás:</strong> {task.assignment.description}
-                  </p>
-                  <Button onClick={() => completeTask(task.assignment.id)}>
-                    Beadás
-                  </Button>
-                </div>
-              </div>
+      {assignedTasks.length > 0 ? (
+        <>
+          <main
+            className="container-fluid p-4 overflow-auto"
+            style={{ flexGrow: 1 }}
+          >
+            <div className="p-4 rounded shadow alert alert-info">
+              <h1 className="text-primary">Kiadott feladatok: </h1>
             </div>
-          ))}
-        </div>
-      </main>
-
+            <hr />
+            <div className="row">
+              {assignedTasks.map((task) => (
+                <div
+                  className="col-md-6 col-lg-4 mb-4"
+                  key={task.assignment.id}
+                >
+                  <div className="card shadow-sm h-100">
+                    <div className="card-body">
+                      <h5 className="card-title font-weight-bold text-primary">
+                        {task.assignment.subject}
+                      </h5>
+                      <p className="card-text text-muted">
+                        <strong>Korosztály:</strong> {task.assignment.ageGroup}
+                        <br />
+                        <strong>Leírás:</strong> {task.assignment.description}
+                      </p>
+                      <Button onClick={() => completeTask(task.assignment.id)}>
+                        Beadás
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </main>
+        </>
+      ) : (
+        <main
+          className="container-fluid p-4 overflow-auto"
+          style={{ flexGrow: 1 }}
+        >
+          <div className="text-center mt-5">
+            <div className="alert alert-info p-4 shadow-sm" role="alert">
+              <p className="display-1">😇</p>
+              <h4 className="alert-heading text-primary">
+                Nincs kiadott feladat!
+              </h4>
+            </div>
+          </div>
+        </main>
+      )}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Fájl feltöltés</Modal.Title>

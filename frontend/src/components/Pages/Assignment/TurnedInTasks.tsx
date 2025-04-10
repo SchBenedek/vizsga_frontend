@@ -104,7 +104,9 @@ export default function TurnedInTasks() {
           className="container-fluid p-4 overflow-auto"
           style={{ flexGrow: 1 }}
         >
-          <h2 className="mb-4 text-dark">Beadott feladatok</h2>
+          <div className="p-4 rounded shadow alert alert-info">
+            <h1 className="text-primary">Beadott feladatok</h1>
+          </div>
           <div className="row">
             {returnedTasks.map((task) => (
               <div className="col-md-6 col-lg-4 mb-4" key={task.assignment.id}>
