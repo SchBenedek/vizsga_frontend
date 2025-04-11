@@ -1,36 +1,53 @@
-export interface Profile{
-    id: number;
-    name: string;
-    email: string;
-    username: string
-    password: string;
-    role: string;
+export type Role = 'Admin' | 'Teacher' | 'Student';
+export type Subjects = 'Maths' | 'History' | 'Literature' | 'English' | 'Science' | 'Compsci';
+export type Level = 'Elementary' | 'Secondary' | 'High' | 'University';
+
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password?: string;
+  role: Role;
 }
 
-export interface Assignment{
-    id: number;
-    subject: string;
-    ageGroup: string;
-    assignments: string;
+export interface Teacher extends User {
+  subject: Subjects;
+  hourlyRate: number;
+  rating: number;
+  assignments: Assignment[];
 }
 
-export interface Teacher{
-    id: number;
-    name: string;
-    subjectTeacher: string;
-    hourlyRate: number;
-    email: string;
-    numberOfStudents: number;
-    rating: number;
-    password: string;
-    role: string;
+export interface Student extends User {
+  ageGroup: Level;
+  studentAssignments: MarkedAssignment[];
 }
 
-export interface Student{
-    id: number;
-    name: string;
-    email: string;
-    ageGroup: string;
-    password: string;
-    role: string;
+export interface Assignment {
+  id: number;
+  subject: string;
+  name: string;
+  ageGroup: string;
+  description: string;
+  teacherId: number;
+  teacher: Teacher;
+  students: MarkedAssignment[]; 
+}
+
+export interface MarkedAssignment {
+  assignmentId: number;
+  studentId: number;
+  completed: boolean;
+  mark: number;
+  assignment?: Assignment; 
+  student?: Student;
+}
+
+export interface StudentAssignmentFile {
+  assignmentId: number;
+  studentId: number;
+  fileName: string;
+  fileType: string;
+  fileData: Blob; 
+  uploadedAt: Date;
 }

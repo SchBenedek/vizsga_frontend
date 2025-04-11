@@ -4,139 +4,151 @@ import { Assignment, Student, Teacher } from "../../libs/types";
 import { TeacherPageNav } from "../../Navbar/TeacherPageNav";
 import { useAuth } from "../../Login/LoginContext";
 import { StudentPageNav } from "../../Navbar/StudentPageNav";
-import { Button } from "react-bootstrap";
+import { useFetch } from "../../libs/api";
 
 export default function TeacherMain() {
-    const { teacherID: authTeacherID } = useAuth();
-    const { teacherID: routeTeacherID } = useParams<{ teacherID: string }>();
+  const { teacherID: authTeacherID } = useAuth();
+  const { teacherID: routeTeacherID } = useParams<{ teacherID: string }>();
+  const token = localStorage.getItem("authToken");
 
-    const { studentID } = useAuth();
+  const teacherID = routeTeacherID || authTeacherID;
 
-    const teacherID = routeTeacherID || authTeacherID;
+  const [filteredAssignments, setFilterAssignments] = useState<Assignment[]>(
+    []
+  );
+  const [teacher, setTeacher] = useState<Teacher | null>(null);
+  const [teacherRating, setTeacherRating] = useState<number>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-    const [student, setStudent] = useState<Student | null>(null);
-    const [filteredAssignments, setFilterAssignments] = useState<Assignment[]>([]);
-    const [teacher, setTeacher] = useState<Teacher | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [showSuccess, setShowSuccess] = useState(false);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+    fetchTeacher();
+  }, [teacherID]);
 
-    useEffect(() => {
-        const token = localStorage.getItem("authToken");
-        if (!token) return;
+  const fetchTeacher = async () => {
+    try {
+      setLoading(true);
 
-        fetch(`http://localhost:3000/students/${studentID}`, {
+      const response = await useFetch<Teacher | null>(
+        `http://localhost:3000/auth/self`,
+        "GET"
+      );
+
+      if (!response || response.statuszKod !== 200) {
+        throw new Error(`Failed to fetch teacher: ${response?.statuszKod}`);
+      }
+
+      const data = response.adat;
+
+      if (!data) {
+        throw new Error("No student data received.");
+      }
+
+      console.log(data);
+      setTeacher(data);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchTeacherRating = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/users/${teacherID}`,
+          {
             method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((response) => {
-            if (!response.ok) throw new Error(`Failed to fetch student: ${response.status}`);
-            return response.json();
-        })
-        .then((data: Student) => {
-            setStudent(data);
-        })
-        .catch((error) => console.error("Error fetching student:", error));
-    }, []);
-
-    useEffect(() => {
-        if (!teacherID) return;
-
-        const fetchTeacher = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`http://localhost:3000/teachers/${teacherID}`);
-                if (!response.ok) throw new Error(`Failed to fetch teacher: ${response.status}`);
-
-                const data = await response.json();
-                setTeacher(data);
-                const filtered = data.assignments?.filter((assignment: Assignment) => assignment.subject === data.subjectTeacher) || [];
-                setFilterAssignments(filtered);
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTeacher();
-    }, [teacherID]);
-
-    const addTeacherId = (teacherId: number) => {
-        if (!student) {
-            console.error("Student not found.");
-            return;
-        }
-
-        const token = localStorage.getItem("authToken");
-
-        fetch(`http://localhost:3000/students/${student.id}`, {
-            method: "PATCH",
             headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify({ teacherId }),
-        })
-        .then((response) => {
-            if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
-            return response.json();
-        })
-        .then((data: Student) => {
-            setStudent(data);
-            setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 2000);
-        })
-        .catch((error) => console.error("Error updating student:", error));
+          }
+        );
+        if (!response.ok)
+          throw new Error(`Server responded with status ${response.status}`);
+
+        const data: Teacher = await response.json();
+        setTeacherRating(data.teacher.rating);
+      } catch (error: any) {
+        setError(error.message);
+      }
     };
+    fetchTeacherRating();
+  }, [teacherID]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-    if (!teacher) return <p>No teacher found.</p>;
-
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!teacher) return <p>No teacher found.</p>;
+  if (teacher)
     return (
-        <div className="d-flex" style={{ height: "100vh" }}>
-            {showSuccess && (
-                <div style={{
-                    position: "fixed",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    backgroundColor: "white",
-                    padding: "20px",
-                    boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
-                    borderRadius: "10px",
-                    zIndex: 1000,
-                    textAlign: "center",
-                }}>
-                    <h3>✅ Successfully Added!</h3>
-                </div>
+      <div
+        className="d-flex"
+        style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
+      >
+        {showSuccess && (
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "white",
+              padding: "20px",
+              boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
+              borderRadius: "10px",
+              zIndex: 1000,
+              textAlign: "center",
+            }}
+          >
+            <h3>✅ Successfully Added!</h3>
+          </div>
+        )}
+
+        {routeTeacherID ? (
+          <StudentPageNav
+            assignments={filteredAssignments}
+            setFilterAssignments={setFilterAssignments}
+          />
+        ) : (
+          <TeacherPageNav
+            assignments={filteredAssignments}
+            setFilterAssignments={setFilterAssignments}
+          />
+        )}
+
+        <main
+          className="container-fluid p-4 overflow-auto"
+          style={{
+            flexGrow: 1,
+            backgroundColor: "#fff",
+            color: "#212529",
+          }}
+        >
+          <div className="p-4 rounded shadow alert alert-info">
+            <h1 className="text-primary mb-3">
+              {routeTeacherID
+                ? `${teacher.firstName} ${teacher.lastName}`
+                : `Üdvözlünk, ${teacher.firstName} ${teacher.lastName}!`}
+            </h1>
+            <h4 className="text-dark">{teacher.email}</h4>
+            {routeTeacherID && (
+              <h5 className="text-secondary">{teacher.subject}</h5>
             )}
 
-            {routeTeacherID ? (
-                <StudentPageNav assignments={filteredAssignments} setFilterAssignments={setFilterAssignments} />
-            ) : (
-                <TeacherPageNav assignments={filteredAssignments} setFilterAssignments={setFilterAssignments} />
-            )}
-
-            <main className="container-fluid p-4 overflow-auto" style={{ flexGrow: 1 }}>
-                <h1>{routeTeacherID ? `${teacher.name}` : `Welcome back, ${teacher.name}!`}</h1>
-                <h3>{teacher.email}</h3>
-                {routeTeacherID ? <h3>{teacher.subjectTeacher}</h3> : <hr />}
-
-                <div>
-                    <h4>{routeTeacherID ? "Rating:" : "Your Rating:"}</h4>
-                    {Array.from({ length: teacher.rating }, (_, index) => (
-                        <span key={index} style={{ color: "gold", fontSize: "1.5rem" }}>⭐</span>
-                    ))}
-                </div>
-
-                {routeTeacherID && (
-                    <Button onClick={() => addTeacherId(teacher.id)}>Tanulok</Button>
-                )}
-            </main>
-        </div>
+            <hr />
+            <h5 className="text-dark">
+              {routeTeacherID ? "Értékelés:" : "A Te értékelésed:"}{" "}
+              <strong>{teacherRating?.toFixed(2)} / 10</strong>
+            </h5>
+          </div>
+        </main>
+      </div>
     );
 }

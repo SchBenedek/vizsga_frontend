@@ -7,11 +7,19 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Startpage from './components/Pages/Startpage.tsx';
-import Assigments from './components/Pages/Assigments.tsx';
+import Assignments from './components/Pages/Assignment/Assigments.tsx';
 import { AuthProvider } from './components/Login/LoginContext.tsx';
 import StudentMain from './components/Pages/Student/StudentMain.tsx';
 import TeacherMain from './components/Pages/Teacher/TeacherMain.tsx';
 import Teachers from './components/Pages/Student/StudentsTeacherChoice.tsx';
+import TeacherStudents from './components/Pages/Teacher/TeachersStudents.tsx';
+import AssignmentCard from './components/Pages/Assignment/AssignmentCard.tsx';
+import ChoosenStudent from './components/Pages/Teacher/ChoosenStudent.tsx';
+import TeacherAssignedTasks from './components/Pages/Assignment/TeacherAssignedTasks.tsx';
+import StudentAssignedTasks from './components/Pages/Assignment/StudentAssignedTasks.tsx';
+import TurnedInTasks from './components/Pages/Assignment/TurnedInTasks.tsx';
+import MarkedTasks from './components/Pages/Assignment/MarkedTasks.tsx';
+import Rating from './components/Pages/Student/Rating.tsx';
 
 const router=createBrowserRouter([
   {
@@ -32,11 +40,43 @@ const router=createBrowserRouter([
   },
   {
     path: "/assigments",
-    element: <Assigments />,
+    element: <Assignments />
+  },
+  {
+    path: "assignmentCard",
+    element: <AssignmentCard />
   },
   {
     path: "/teachers",
     element: <Teachers />
+  },
+  {
+    path: "/teacher/students",
+    element: <TeacherStudents />
+  },
+  {
+    path: "/choosenStudent",
+    element: <ChoosenStudent />
+  },
+  {
+    path: "/teacherAssignedTasks",
+    element: <TeacherAssignedTasks />
+  },
+  {
+    path: "/studentAssignedTasks",
+    element: <StudentAssignedTasks />
+  },
+  {
+    path: "/turnedInTasks",
+    element: <TurnedInTasks />
+  },
+  {
+    path: '/markedAssignments',
+    element: <MarkedTasks />
+  },
+  {
+    path: '/rating',
+    element: <Rating />
   }
 ])
 

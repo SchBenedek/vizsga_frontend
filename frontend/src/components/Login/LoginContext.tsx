@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -9,6 +9,8 @@ interface AuthContextType {
   setTeacherId: (id: string | null) => void;
   studentID: string | null;
   setStudentId: (id: string | null) => void;
+  teacherSubject: string | null;
+  setTeacherSubject: (value: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,7 +21,9 @@ const AuthContext = createContext<AuthContextType>({
   teacherID: null,
   setTeacherId: () => {},
   studentID: null,
-  setStudentId: () => {}
+  setStudentId: () => {},
+  teacherSubject: null,
+  setTeacherSubject: () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -38,6 +42,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [studentID, setStudentIdState] = useState<string | null>(() => {
     return localStorage.getItem("studentID") || null;
   });
+
+  const [teacherSubject, setTeacherSubjectState] = useState<string | null>(() => {
+    return localStorage.getItem("teacherSubject") || null;
+  })
 
   const setIsLoggedIn = (value: boolean) => {
     setIsLoggedInState(value);
@@ -67,8 +75,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const setTeacherSubject = (value: string) => {
+    setTeacherSubjectState(value);
+    localStorage.setItem("teacherSubject", value.toString());
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole, teacherID, setTeacherId, studentID, setStudentId }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole, teacherID, setTeacherId, studentID, setStudentId, teacherSubject, setTeacherSubject }}>
       {children}
     </AuthContext.Provider>
   );
