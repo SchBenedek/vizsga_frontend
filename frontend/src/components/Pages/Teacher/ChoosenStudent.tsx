@@ -31,7 +31,6 @@ export default function ChoosenStudent() {
         return response.json();
       })
       .then((data: Student) => {
-        console.log("Fetched students:", data);
         setStudent(data);
         setLoading(false);
       })
@@ -45,7 +44,7 @@ export default function ChoosenStudent() {
     localStorage.setItem("isAssignmentChoice", "true");
     const name = `${student?.firstName} ${student?.lastName}`;
     localStorage.setItem("studentName", name);
-    localStorage.setItem("studentAgeGroup", `${student?.ageGroup}`);
+    localStorage.setItem("studentAgeGroup", `${student?.student.ageGroup}`);
     navigate('/assigments');
   }
 

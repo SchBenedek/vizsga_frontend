@@ -94,12 +94,15 @@ export default function Assignments() {
   }, []);
 
   useEffect(() => {
-    setFilterAssignments(
-      assignments.filter((a: Assignment) => {
-        a.ageGroup == localStorage.getItem("studentAgeGroup");
-      })
+    const studentAgeGroup = localStorage.getItem("studentAgeGroup");
+    if (!studentAgeGroup) return;
+  
+    const filtered = assignments.filter(
+      (a: Assignment) => a.ageGroup === studentAgeGroup
     );
-  }, []);
+    setFilterAssignments(filtered);
+  }, [assignments]);
+  
 
   return (
     <div

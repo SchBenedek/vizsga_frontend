@@ -29,7 +29,6 @@ export default function TeacherStudents() {
         return response.json();
       })
       .then((data: Student[]) => {
-        console.log("Fetched students:", data);
         setStudents(data);
         setLoading(false);
       })
