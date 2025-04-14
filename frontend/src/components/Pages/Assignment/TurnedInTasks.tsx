@@ -2,19 +2,21 @@ import { useEffect, useState } from "react";
 import { TeacherPageNav } from "../../Navbar/TeacherPageNav";
 import { Assignment } from "../../libs/types";
 import { Button, Form } from "react-bootstrap";
+import { useAuth } from "../../Login/LoginContext";
 
 export default function TurnedInTasks() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [returnedTasks, setReturnedTasks] = useState<Assignment[]>([]);
   const [mark, setMark] = useState<number | "">("");
+  const { teacherID } = useAuth();
 
   const fetchReturnedTasks = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(
-        `http://localhost:3000/assignments/assigned`
+        `http://localhost:3000/assignments/returned/${teacherID}`
       );
       if (!response.ok) throw new Error("Failed to fetch turned-in tasks");
 
