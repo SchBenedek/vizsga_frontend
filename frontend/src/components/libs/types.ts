@@ -31,7 +31,8 @@ export interface Assignment {
   description: string;
   teacherId: number;
   teacher: Teacher;
-  students: MarkedAssignment[]; 
+  students: MarkedAssignment[];
+  completed: boolean; 
 }
 
 export interface MarkedAssignment {

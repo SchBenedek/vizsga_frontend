@@ -31,7 +31,7 @@ export default function TurnedInTasks() {
 
       const tasksWithFiles = tasks.map((task: any) => {
         const assignmentFiles = files.filter(
-          (file: any) => file.assignmentId === task.assignment.id
+          (file: any) => file.assignmentId == task.assignment.id
         );
         return {
           ...task,

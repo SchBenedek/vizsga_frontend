@@ -5,26 +5,34 @@ import { useAuth } from "../../Login/LoginContext";
 import { useNavigate } from "react-router-dom";
 
 export default function TeacherAssignedTasks() {
-  const { role } = useAuth();
+  const { role, teacherID } = useAuth();
   const [assignedTasks, setAssignedTasks] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const fetchAssignedTasks = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(
-        "http://localhost:3000/assignments/assigned"
+        "http://localhost:3000/assignments/assigned",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!response.ok)
         throw new Error(`Server responded with status ${response.status}`);
 
       const data = await response.json();
-      const filteredTasks = data.filter((task: Assignment) => !task.completed);
+      const filteredTasks = data.filter(
+        (task: Assignment) =>
+          task.student.user.sTeacherId == teacherID && !task.completed
+      );
       setAssignedTasks(filteredTasks);
-      console.log(data);
     } catch (error: any) {
       setError(error.message);
     } finally {
