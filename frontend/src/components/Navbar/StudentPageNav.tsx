@@ -46,7 +46,7 @@ export const StudentPageNav = ({
         borderRight: "5px solid var(--bs-primary)",
       }}
     >
-      <div className="d-flex align-items-center mb-4">
+      <div className="d-flex align-items-center mb-4" data-testid="student-name">
         <span className="fs-4 text-white fw-semibold">{studentName}</span>
       </div>
       <ul className="nav nav-pills flex-column mb-auto">

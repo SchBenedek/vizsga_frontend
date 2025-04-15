@@ -33,9 +33,7 @@ export default function Rating() {
           throw new Error(`Server responded with status ${response.status}`);
 
         const data = await response.json();
-        console.log("Fetched id:", data.sTeacherId);
         setsTeacherId(data.sTeacherId);
-        console.log("after usestate: ", sTeacherId);
       } catch (error: any) {
         setError(error.message);
       } finally {
@@ -66,9 +64,7 @@ export default function Rating() {
           throw new Error(`Server responded with status ${response.status}`);
 
         const data: Teacher = await response.json();
-        console.log("Fetched teacher:", data);
         setTeacher(data);
-        console.log("Teacher: ", teacher);
       } catch (error: any) {
         setError(error.message);
       } finally {
@@ -114,7 +110,6 @@ export default function Rating() {
         setMessage(`Hiba: ${err.message}`);
       }
     } catch (err) {
-      console.error(err);
       setMessage("Váratlan hiba történt.");
     }
   };

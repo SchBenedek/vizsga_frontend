@@ -1,12 +1,7 @@
 {
-  "compilerOptions": {
-    "jsx": "react",
-    "jsx": "react",
-    "types": ["vitest"],
-    "module": "CommonJS",
-    "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true
-  },
-  "include": ["src", "src/tests", "setupTests.ts"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

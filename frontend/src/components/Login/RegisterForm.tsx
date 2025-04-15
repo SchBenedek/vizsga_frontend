@@ -94,22 +94,18 @@ function RegisterForm() {
       setIsLoggedIn(true);
 
       if (self.role === "Teacher") {
-        console.log("A felhasználó tanár.");
         setTeacherSubject(self.subject);
         localStorage.setItem("token", self.token);
         setTeacherId(self.id);
         setTimeout(() => navigate("/teachers/dashboard"), 0);
       }
       if (self.role === "Student") {
-        console.log("A felhasználó tanuló.");
         localStorage.setItem("token", self.token);
         setStudentId(self.id);
         navigate("/studentmain");
       }
-      console.log("Sikeres regisztráció:", data);
       navigate("/");
     } catch (error) {
-      console.error("Regisztrációs hiba:", error);
       alert("Hiba történt a regisztráció során.");
     }
   };

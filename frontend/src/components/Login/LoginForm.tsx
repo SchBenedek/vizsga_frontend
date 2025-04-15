@@ -45,14 +45,11 @@ function LoginForm() {
       });
       const self = await req.json();
 
-      console.log(self);
-
       setRole(self.role);
       setLocalRole(self.role);
       setIsLoggedIn(true);
 
       if (self.role === "Teacher") {
-        console.log("A felhasználó tanár.");
         setTeacherSubject(self.subject);
         localStorage.setItem("token", self.token);
         let name = self.firstName + " " + self.lastName;
@@ -61,13 +58,11 @@ function LoginForm() {
         setTimeout(() => navigate("/teachers/dashboard"), 0);
       }
       if (self.role === "Student") {
-        console.log("A felhasználó tanuló.");
         localStorage.setItem("token", self.token);
         setStudentId(self.id);
         navigate("/studentmain");
       }
     } catch (error: any) {
-      console.error("Login error:", error);
       setError(error.message || "Hibás email vagy jelszó.");
     }
   };
