@@ -15,7 +15,6 @@ export default function Assignments() {
   const navigate = useNavigate();
   const [isAssignmentChoosen, setIsAssignmentChoosen] = useState(false);
   const [assignedAssignments, setAssignedAssignments] = useState<number[]>([]);
-  const [alreadyAssigned, setAlreadyAssigned] = useState<boolean>(false);
 
   const fetchAssignments = async () => {
     setLoading(true);

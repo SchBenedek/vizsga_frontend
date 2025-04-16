@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { StudentPageNav } from "../../Navbar/StudentPageNav";
 import { useAuth } from "../../Login/LoginContext";
 import { Assignment, Teacher } from "../../libs/types";
-import { Link, Navigate } from "react-router-dom";
 
 export default function Teachers() {
   const { studentID } = useAuth();
@@ -35,7 +34,6 @@ export default function Teachers() {
         return response.json();
       })
       .then((data: Teacher[]) => {
-        console.log(data);
         setTeachers(data);
         setFilterTeachers(data);
         setLoading(false);
@@ -66,8 +64,6 @@ export default function Teachers() {
           }),
         }
       );
-      console.log("s ID: ", studentID);
-      console.log("t ID: ", teacherId);
 
       if (!response.ok) {
         throw new Error("Failed to select teacher");
@@ -76,7 +72,6 @@ export default function Teachers() {
       setSelectedTId(teacherId);
       alert("Teacher selected successfully!");
     } catch (error) {
-      console.error("Error selecting teacher:", error);
       alert("Error selecting teacher");
     }
   };
@@ -91,7 +86,6 @@ export default function Teachers() {
         },
       });
       const data = await response.json();
-      console.log("data at teacherchoice: ", data);
 
       if (!response.ok) {
         throw new Error("Failed to select teacher");
@@ -99,7 +93,6 @@ export default function Teachers() {
 
       setSelectedTId(data.sTeacherId);
     } catch (error) {
-      console.error("Error selecting teacher:", error);
       alert("Error selecting teacher");
     }
   };

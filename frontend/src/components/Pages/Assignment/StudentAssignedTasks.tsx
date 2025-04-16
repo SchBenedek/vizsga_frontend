@@ -4,7 +4,6 @@ import { useAuth } from "../../Login/LoginContext";
 import { useNavigate } from "react-router-dom";
 import { StudentPageNav } from "../../Navbar/StudentPageNav";
 import { Button, Modal } from "react-bootstrap";
-import { body } from "framer-motion/client";
 
 export default function StudentAssignedTasks() {
   const { role, studentID } = useAuth();
@@ -35,12 +34,10 @@ export default function StudentAssignedTasks() {
         throw new Error(`Server responded with status ${response.status}`);
 
       const data = await response.json();
-      console.log("data: ", data);
       const filteredTasks = data.filter(
         (task: Assignment) => task.studentId == studentID && !task.completed
       );
       setAssignedTasks(filteredTasks);
-      console.log("filter: ", filteredTasks);
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -64,7 +61,6 @@ export default function StudentAssignedTasks() {
       setAssignedTasks((prevTasks) =>
         prevTasks.filter((task) => task.assignment.id !== assignmentId)
       );
-      console.log(showModal.valueOf.toString());
       setAssignmId(assignmentId);
       setShowModal(true);
     } catch (error: any) {

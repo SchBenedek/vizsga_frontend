@@ -40,7 +40,6 @@ export default function TurnedInTasks() {
       });
 
       setReturnedTasks(tasksWithFiles);
-      console.log(tasks);
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -79,7 +78,6 @@ export default function TurnedInTasks() {
       if (!response.ok) throw new Error("Failed to download file");
 
       const blob = await response.blob();
-      console.log(blob);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;

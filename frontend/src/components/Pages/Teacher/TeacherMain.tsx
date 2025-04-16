@@ -49,7 +49,6 @@ export default function TeacherMain() {
         throw new Error("No student data received.");
       }
 
-      console.log(data);
       setTeacher(data);
     } catch (error: any) {
       setError(error.message);
