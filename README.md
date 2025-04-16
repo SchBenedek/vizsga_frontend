@@ -12,7 +12,7 @@ A React application powered by [Vite](https://vitejs.dev/) for development and b
 
 ## 🛠️ Getting Started
 
-### Prerequisites
+### ⏮️ Prerequisites
 
 Ensure you have the following installed:
 
@@ -21,7 +21,7 @@ Ensure you have the following installed:
 - [Bootstrap](https://getbootstrap.com/docs/5.0/getting-started/download/) (v5.0 recommended)
 - [Vite](https://vite.dev)
  
-### Installation
+### ⬇️ Installation
 
 ```bash
 git clone https://github.com/SchBenedek/vizsga_frontend
@@ -29,7 +29,7 @@ cd vizsga_frontend
 npm install
 ```
 
-### Run project
+### 🏃‍♂️‍➡️ Run project
 
 To run this project, read the Notes below!
 
@@ -38,11 +38,11 @@ npm run dev
 o #to open in browser
 ```
 
-### Tests
+### 🧪 Testing
 
-The tests for this project are written using Vitest, a fast and modern unit testing framework built specifically for Vite-powered projects.
+This project uses [Vitest](https://vitest.dev) for unit testing of core components and logic. You can find the tests inside the ```src/tests``` folder.
 
-You can find some in the documentation.
+You can find them in the documentation.
 
 To execute the test suite, use the following command in your terminal:
 ```bash
@@ -58,6 +58,61 @@ Or, if you want to include coverage reports:
 ```bash
 npx vitest run --coverage
 ```
+
+## 📖  Developments documentation
+
+### 🔧 Project Structure
+
+This project is a React + TypeScript frontend application, built and developed using Vite for optimal speed and performance. Styling is handled with Bootstrap 5, enabling a responsive and well-structured UI.
+
+The main directory structure is as follows:
+
+```src/components``` – Reusable React components
+
+```src/pages``` – Page-level components for views like Login, Home, Assignments
+
+```src/services``` – Functions responsible for API communication
+
+```src/hooks``` – Custom React hooks for state and effect management
+
+```src/types``` – TypeScript type definitions
+
+```src/tests``` – Unit tests using Vitest
+
+### 🧐 Features and Modules
+
+The goal of this project is to serve as the frontend of an educational platform where students can rate their teachers and view or complete assignments.
+
+Main features include:
+
+- 🔐 Authentication using token-based login
+
+- 👨‍🏫 Teacher rating functionality
+
+- 📋 Assignment display and filtering based on user roles
+
+- 📬 Dynamic data fetching from the backend API
+
+- 🧪 Unit testing with Vitest
+
+### ⚙️ Development Phases
+
+The development process followed these stages:
+
+- Project initialization with Vite + React + TypeScript
+
+- Page and component scaffolding
+
+- API integration and data modeling
+
+- User interaction handling and state management
+
+- Styling using Bootstrap
+
+- Testing and debugging
+
+- Documentation and README updates
+
 
 ## 📝 Note
 
