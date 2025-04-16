@@ -31,7 +31,7 @@ npm install
 
 ### Run project
 
-To run this project, read the [Notes](Notes) below!
+To run this project, read the Notes below!
 
 ```bash
 npm run dev
